@@ -1,0 +1,827 @@
+﻿20130603
+http://www.springsource.org/spring-batch
+http://static.springsource.org/spring-batch/reference/html-single/index.html
+
+---------------------------------
+Vocabulaire utilisé :
+
+Job : Un job désigne un traitement batch.
+
+Step : Phase atomique d’un batch. Un job est composé de steps ;
+il s’agit d’une étape du batch. Un step encapsule les informations permettant de définir et de contrôler le déroulement du batch.
+
+Tasklet : Tâche exécutée par un step, par exemple
+“Parser le fichier test.xml”, “Insérer un enregistrement en base de données”…
+Dans le cadre de Spring-batch, cela consiste en une implémentation de l’interface Tasklet.
+Un step n’exécute qu’une tasklet ; en revanche une même tasklet peut être exécutée par plusieurs steps.
+
+Spring-batch propose un certain nombre de tasklets pré-définies, orientées par exemple vers
+la lecture et l’écriture de fichiers. Il est cependant possible de créer ses propres tasklets,
+c’est ce que nous allons faire au cours de cet article.
+
+---------------------------------
+TUTOs
+
+Test avec : http://blog-rd.ideotechnologies.com/?p=2021
+
+Autres :
+http://blog.octo.com/spring-batch-par-quel-bout-le-prendre/
+http://blog.excilys.com/2013/01/03/introduction-a-spring-batch/
+http://forum.springsource.org/showthread.php?61042-Spring-Batch-beginners-tutorial
+http://java.dzone.com/news/spring-batch-hello-world-1
+http://www.jroller.com/0xcafebabe/entry/spring_batch_hello_world_1
+http://www.jroller.com/0xcafebabe/entry/spring_batch_hello_world_2
+http://alain-cieslik.com/category/spring-batch/
+
+
+1/ Création BDD
+
+CREATE DATABASE SPRINGBATCHTESTBDD;
+
+CREATE TABLE SPRINGBATCHTESTBDD.Personne (
+ID INTEGER,
+NOM VARCHAR (50),
+PRENOM VARCHAR (50),
+CIVILITE VARCHAR (3),
+PRIMARY KEY (ID)
+)ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+connect SPRINGBATCHTESTBDD;
+select * from Personne;
+truncate Personne;
+commit;
+
+2/ Implémentation du batch
+
+TODO : suivre le tuto avec les source (cf. le .zip) : SpringBatch-POC
+
+3/ Test OK (modification du main) +
+Deux remarques:
+- ce n’est pas utile de créer un nouvelle objet Person dans le cas exposé => OK
+- PersonJdbcWriter ne doit pas avoir d’annotation @Transactional car Spring Batch gère lui même les transactions => OK
+
+TODO : faire TU avec lib de spring batch
+faire d'autre steps
+lancer batch ligne de commande avec org.springframework.batch.core.launch.support.CommandLineJobRunner (cf : http://java.dzone.com/news/spring-batch-hello-world-1)
+
+
+20150121 TEST avec log MySQL :
+
+1,DUPONT,Philippe,M
+2,DUPUIS,Marie,Mme
+3,Gallois,Guillaume,M
+4,MARTIN,Cyril,M
+5,MICHEL,Sophie,Mme
+6,MERCIER,Muriel,Mme
+7,VIDAL,Thomas,M
+8,JACKSON,Michael,M
+9,BROWN,Michele,Mme
+10,WILLIAMS,Venus,Mme
+
+INFO : com.cgi.batch.spring.BatchPersonne - Lancement du batch ... at Wed Jan 21 11:59:28 CET 2015
+INFO : org.springframework.context.support.ClassPathXmlApplicationContext - Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@5a2ee4e8: display name [org.springframework.context.support.ClassPathXmlApplicationContext@5a2ee4e8]; startup date [Wed Jan 21 11:59:28 CET 2015]; root of context hierarchy
+INFO : org.springframework.beans.factory.xml.XmlBeanDefinitionReader - Loading XML bean definitions from class path resource [applicationContext.xml]
+INFO : org.springframework.beans.factory.support.DefaultListableBeanFactory - Overriding bean definition for bean 'importPersonnes': replacing [Generic bean: class [org.springframework.batch.core.configuration.xml.SimpleFlowFactoryBean]; scope=singleton; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null] with [Generic bean: class [org.springframework.batch.core.configuration.xml.JobParserJobFactoryBean]; scope=singleton; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null]
+INFO : org.springframework.context.support.ClassPathXmlApplicationContext - Bean factory for application context [org.springframework.context.support.ClassPathXmlApplicationContext@5a2ee4e8]: org.springframework.beans.factory.support.DefaultListableBeanFactory@77906bf3
+INFO : org.springframework.beans.factory.support.DefaultListableBeanFactory - Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@77906bf3: defining beans [personneReaderCSV,personProcessor,personDaoWriter,idJdbcTemplate,dataSource,transactionManager,org.springframework.aop.config.internalAutoProxyCreator,org.springframework.transaction.annotation.AnnotationTransactionAttributeSource#0,org.springframework.transaction.interceptor.TransactionInterceptor#0,org.springframework.transaction.config.internalTransactionAdvisor,jobLauncher,jobRepository,org.springframework.batch.core.scope.internalStepScope,org.springframework.beans.factory.config.CustomEditorConfigurer,org.springframework.batch.core.configuration.xml.CoreNamespacePostProcessor,readWritePersonne,importPersonnes]; root of factory hierarchy
+INFO : com.cgi.batch.beans.Personne - new Personne with id 0
+INFO : com.cgi.batch.beans.Personne - new Personne with id 0
+INFO : com.cgi.batch.spring.PersonProcessor - Call for process with personne : Personne [id=1, nom=DUPONT, prenom=Philippe, civilite=M]
+INFO : com.cgi.batch.spring.PersonProcessor - need to store personneInput : Personne [id=1, nom=DUPONT, prenom=Philippe, civilite=M]
+INFO : com.cgi.batch.spring.PersonProcessor - Call for process with personne : Personne [id=2, nom=DUPUIS, prenom=Marie, civilite=Mme]
+INFO : com.cgi.batch.spring.PersonJdbcWriter - Call for process with items : [Personne [id=1, nom=DUPONT, prenom=Philippe, civilite=M]]
+INFO : com.cgi.batch.spring.PersonJdbcWriter - Update done for personne id 1
+INFO : com.cgi.batch.spring.PersonJdbcWriter - Insert done for personne id 1
+INFO : com.cgi.batch.beans.Personne - new Personne with id 0
+INFO : com.cgi.batch.beans.Personne - new Personne with id 0
+INFO : com.cgi.batch.spring.PersonProcessor - Call for process with personne : Personne [id=3, nom=Gallois, prenom=Guillaume, civilite=M]
+INFO : com.cgi.batch.spring.PersonProcessor - need to store personneInput : Personne [id=3, nom=Gallois, prenom=Guillaume, civilite=M]
+INFO : com.cgi.batch.spring.PersonProcessor - Call for process with personne : Personne [id=4, nom=MARTIN, prenom=Cyril, civilite=M]
+INFO : com.cgi.batch.spring.PersonProcessor - need to store personneInput : Personne [id=4, nom=MARTIN, prenom=Cyril, civilite=M]
+INFO : com.cgi.batch.spring.PersonJdbcWriter - Call for process with items : [Personne [id=3, nom=Gallois, prenom=Guillaume, civilite=M], Personne [id=4, nom=MARTIN, prenom=Cyril, civilite=M]]
+INFO : com.cgi.batch.spring.PersonJdbcWriter - Update done for personne id 3
+INFO : com.cgi.batch.spring.PersonJdbcWriter - Insert done for personne id 3
+INFO : com.cgi.batch.spring.PersonJdbcWriter - Update done for personne id 4
+INFO : com.cgi.batch.spring.PersonJdbcWriter - Insert done for personne id 4
+INFO : com.cgi.batch.beans.Personne - new Personne with id 0
+INFO : com.cgi.batch.beans.Personne - new Personne with id 0
+INFO : com.cgi.batch.spring.PersonProcessor - Call for process with personne : Personne [id=5, nom=MICHEL, prenom=Sophie, civilite=Mme]
+INFO : com.cgi.batch.spring.PersonProcessor - Call for process with personne : Personne [id=6, nom=MERCIER, prenom=Muriel, civilite=Mme]
+INFO : com.cgi.batch.spring.PersonJdbcWriter - Call for process with items : []
+INFO : com.cgi.batch.beans.Personne - new Personne with id 0
+INFO : com.cgi.batch.beans.Personne - new Personne with id 0
+INFO : com.cgi.batch.spring.PersonProcessor - Call for process with personne : Personne [id=7, nom=VIDAL, prenom=Thomas, civilite=M]
+INFO : com.cgi.batch.spring.PersonProcessor - need to store personneInput : Personne [id=7, nom=VIDAL, prenom=Thomas, civilite=M]
+INFO : com.cgi.batch.spring.PersonProcessor - Call for process with personne : Personne [id=8, nom=JACKSON, prenom=Michael, civilite=M]
+INFO : com.cgi.batch.spring.PersonProcessor - need to store personneInput : Personne [id=8, nom=JACKSON, prenom=Michael, civilite=M]
+INFO : com.cgi.batch.spring.PersonJdbcWriter - Call for process with items : [Personne [id=7, nom=VIDAL, prenom=Thomas, civilite=M], Personne [id=8, nom=JACKSON, prenom=Michael, civilite=M]]
+INFO : com.cgi.batch.spring.PersonJdbcWriter - Update done for personne id 7
+INFO : com.cgi.batch.spring.PersonJdbcWriter - Insert done for personne id 7
+INFO : com.cgi.batch.spring.PersonJdbcWriter - Update done for personne id 8
+INFO : com.cgi.batch.spring.PersonJdbcWriter - Insert done for personne id 8
+INFO : com.cgi.batch.beans.Personne - new Personne with id 0
+INFO : com.cgi.batch.beans.Personne - new Personne with id 0
+INFO : com.cgi.batch.spring.PersonProcessor - Call for process with personne : Personne [id=9, nom=BROWN, prenom=Michele, civilite=Mme]
+INFO : com.cgi.batch.spring.PersonProcessor - Call for process with personne : Personne [id=10, nom=WILLIAMS, prenom=Venus, civilite=Mme]
+INFO : com.cgi.batch.spring.PersonJdbcWriter - Call for process with items : []
+INFO : com.cgi.batch.spring.BatchPersonne - Fin du batch ... at Wed Jan 21 11:59:29 CET 2015
+
+ICI => Reader & Processor tjs 2x et Writer 1x avec un list qui peut être de 2 (max), 1 ou 0 éléments
+PersonJdbcWriter appelé 5x car 10 personnes et commit de 2
+(Avec 3 personnes PersonJdbcWriter appelé 2x)
+
+MySQL : C:\apps\MySQL\logs
+
+150121 11:59:29	   53 Connect	root@localhost on springbatchtestbdd
+		   53 Query	/* mysql-connector-java-5.1.6 ( Revision: ${svn.Revision} ) */SHOW VARIABLES WHERE Variable_name ='language' OR Variable_name = 'net_write_timeout' OR Variable_name = 'interactive_timeout' OR Variable_name = 'wait_timeout' OR Variable_name = 'character_set_client' OR Variable_name = 'character_set_connection' OR Variable_name = 'character_set' OR Variable_name = 'character_set_server' OR Variable_name = 'tx_isolation' OR Variable_name = 'transaction_isolation' OR Variable_name = 'character_set_results' OR Variable_name = 'timezone' OR Variable_name = 'time_zone' OR Variable_name = 'system_time_zone' OR Variable_name = 'lower_case_table_names' OR Variable_name = 'max_allowed_packet' OR Variable_name = 'net_buffer_length' OR Variable_name = 'sql_mode' OR Variable_name = 'query_cache_type' OR Variable_name = 'query_cache_size' OR Variable_name = 'init_connect'
+		   53 Query	SHOW COLLATION
+		   53 Query	SET character_set_results = NULL
+		   53 Query	SET autocommit=1
+		   53 Query	SELECT @@session.tx_isolation
+		   53 Query	SET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE
+		   53 Query	SET autocommit=0
+		   53 Query	commit
+		   53 Query	SET autocommit=1
+		   53 Query	SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ
+		   53 Query	SELECT @@session.tx_isolation
+		   53 Query	SET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE
+		   53 Query	SET autocommit=0
+		   53 Query	commit
+		   53 Query	SET autocommit=1
+		   53 Query	SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ
+		   53 Query	SET autocommit=0
+		   53 Query	commit
+		   53 Query	SET autocommit=1
+		   53 Query	SET autocommit=0
+		   53 Query	commit
+		   53 Query	SET autocommit=1
+		   53 Query	SET autocommit=0
+		   53 Query	commit
+		   53 Query	SET autocommit=1
+		   53 Query	SET autocommit=0
+		   53 Query	commit
+		   53 Query	SET autocommit=1
+		   53 Query	SET autocommit=0
+		   53 Query	commit
+		   53 Query	SET autocommit=1
+		   53 Query	SET autocommit=0
+		   53 Query	commit
+		   53 Query	SET autocommit=1
+		   53 Query	SET autocommit=0
+		   53 Query	update PERSONNE set nom='DUPONT', prenom='Philippe', civilite='M' where id=1
+		   53 Query	insert into PERSONNE (id,nom,prenom,civilite) values (1,'DUPONT','Philippe','M')
+		   53 Query	commit
+		   53 Query	SET autocommit=1
+		   53 Query	SET autocommit=0
+		   53 Query	update PERSONNE set nom='Gallois', prenom='Guillaume', civilite='M' where id=3
+		   53 Query	insert into PERSONNE (id,nom,prenom,civilite) values (3,'Gallois','Guillaume','M')
+		   53 Query	update PERSONNE set nom='MARTIN', prenom='Cyril', civilite='M' where id=4
+		   53 Query	insert into PERSONNE (id,nom,prenom,civilite) values (4,'MARTIN','Cyril','M')
+		   53 Query	commit
+		   53 Query	SET autocommit=1
+		   53 Query	SET autocommit=0
+		   53 Query	commit
+		   53 Query	SET autocommit=1
+		   53 Query	SET autocommit=0
+		   53 Query	update PERSONNE set nom='VIDAL', prenom='Thomas', civilite='M' where id=7
+		   53 Query	insert into PERSONNE (id,nom,prenom,civilite) values (7,'VIDAL','Thomas','M')
+		   53 Query	update PERSONNE set nom='JACKSON', prenom='Michael', civilite='M' where id=8
+		   53 Query	insert into PERSONNE (id,nom,prenom,civilite) values (8,'JACKSON','Michael','M')
+		   53 Query	commit
+		   53 Query	SET autocommit=1
+		   53 Query	SET autocommit=0
+		   53 Query	commit
+		   53 Query	SET autocommit=1
+		   53 Query	SET autocommit=0
+		   53 Query	commit
+		   53 Query	SET autocommit=1
+		   53 Query	SET autocommit=0
+		   53 Query	commit
+		   53 Query	SET autocommit=1
+		   53 Query	SET autocommit=0
+		   53 Query	commit
+		   53 Query	SET autocommit=1
+		   53 Query	SET autocommit=0
+		   53 Query	commit
+		   53 Query	SET autocommit=1
+		   53 Query	SET autocommit=0
+		   53 Query	commit
+		   53 Query	SET autocommit=1
+		   
+20150219 Test transaction avec JDBCTemplate dans writer sur deux table => OK
+
+
+CREATE TABLE SPRINGBATCHTESTBDD.Adresse (
+ID INTEGER,
+CITY VARCHAR (50),
+PRIMARY KEY (ID)
+)ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+Rollback dans le cas composite writer ? => OUI
+
+20150401 TEST Batch Status vs. Exit Status
+
+avec dans le writer :
+			
+			if(personne.getId() == 4) {
+				throw new Exception("Error for personne 4 !");
+			}
+			
+Le batch s'arrête, il ne passe pas aux items suivants ...
+
+Si besoin de skip :
+
+5.1.5 Configuring Skip Logic
+http://docs.spring.io/spring-batch/reference/html/configureStep.html
+
+Test skip et retry avec : 
+
+<step id="readWritePersonne">
+			<!-- A tasklet is an object containing any custom logic to be executed 
+				as a part of a job -->
+			<tasklet>
+				<chunk reader="personneReaderCSV" processor="personProcessor"
+					writer="myCompositeItemWriter" commit-interval="2" skip-limit="1000" retry-limit="1">
+				<skippable-exception-classes>
+	                 <include class="java.lang.Exception"/>
+            	</skippable-exception-classes>
+            	<retryable-exception-classes>
+            		<include class="com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException"/>
+         		</retryable-exception-classes>
+			</chunk>
+			</tasklet>
+			<listeners>
+				<listener ref="itemFailureListener" />
+	    	</listeners>
+		</step>
+		
+Si l'on lance le batch plusiuers fois : ils y a bien de erreur de "Duplicate entry" qui sont skip avec un retry de 1.
+Les logs avec l'exception tracée dans le listener => 
+
+INFO : com.cgi.batch.spring.BatchPersonne - Lancement du batch ... at Wed Apr 01 13:22:49 CEST 2015
+INFO : org.springframework.context.support.ClassPathXmlApplicationContext - Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@2bc758d7: display name [org.springframework.context.support.ClassPathXmlApplicationContext@2bc758d7]; startup date [Wed Apr 01 13:22:49 CEST 2015]; root of context hierarchy
+INFO : org.springframework.beans.factory.xml.XmlBeanDefinitionReader - Loading XML bean definitions from class path resource [applicationContext.xml]
+INFO : org.springframework.beans.factory.support.DefaultListableBeanFactory - Overriding bean definition for bean 'importPersonnes': replacing [Generic bean: class [org.springframework.batch.core.configuration.xml.SimpleFlowFactoryBean]; scope=singleton; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null] with [Generic bean: class [org.springframework.batch.core.configuration.xml.JobParserJobFactoryBean]; scope=singleton; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null]
+INFO : org.springframework.context.support.ClassPathXmlApplicationContext - Bean factory for application context [org.springframework.context.support.ClassPathXmlApplicationContext@2bc758d7]: org.springframework.beans.factory.support.DefaultListableBeanFactory@239f768f
+INFO : org.springframework.beans.factory.support.DefaultListableBeanFactory - Overriding bean definition for bean 'itemFailureListener': replacing [Generic bean: class [com.cgi.batch.spring.ItemFailureListener]; scope=step; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=false; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null; defined in class path resource [applicationContext.xml]] with [Root bean: class [org.springframework.batch.core.scope.util.PlaceholderProxyFactoryBean]; scope=singleton; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null; defined in BeanDefinition defined in class path resource [applicationContext.xml]]
+INFO : org.springframework.beans.factory.support.DefaultListableBeanFactory - Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@239f768f: defining beans [personneReaderCSV,personProcessor,personDaoWriter,idJdbcTemplate,dataSource,transactionManager,org.springframework.aop.config.internalAutoProxyCreator,org.springframework.transaction.annotation.AnnotationTransactionAttributeSource#0,org.springframework.transaction.interceptor.TransactionInterceptor#0,org.springframework.transaction.config.internalTransactionAdvisor,jobLauncher,jobRepository,myCompositeItemWriter,cvsFileItemWriter,itemFailureListener,org.springframework.batch.core.scope.internalStepScope,org.springframework.beans.factory.config.CustomEditorConfigurer,org.springframework.batch.core.configuration.xml.CoreNamespacePostProcessor,readWritePersonne,importPersonnes,lazyBindingProxy.itemFailureListener]; root of factory hierarchy
+INFO : com.cgi.batch.beans.Personne - new Personne with id 0
+INFO : com.cgi.batch.beans.Personne - new Personne with id 0
+INFO : com.cgi.batch.spring.PersonProcessor - Call for process with personne : Personne [id=1, nom=DUPONT, prenom=Philippe, civilite=M]
+INFO : com.cgi.batch.spring.PersonProcessor - need to store personneInput : Personne [id=1, nom=DUPONT, prenom=Philippe, civilite=M]
+INFO : com.cgi.batch.spring.PersonProcessor - Call for process with personne : Personne [id=2, nom=DUPUIS, prenom=Marie, civilite=Mme]
+INFO : com.cgi.batch.spring.PersonJdbcWriter - Call for process with items : [Personne [id=1, nom=DUPONT, prenom=Philippe, civilite=M]]
+INFO : com.cgi.batch.spring.PersonJdbcWriter - Update done for personne id 1
+INFO : org.springframework.beans.factory.xml.XmlBeanDefinitionReader - Loading XML bean definitions from class path resource [org/springframework/jdbc/support/sql-error-codes.xml]
+ERROR: com.cgi.batch.spring.ItemFailureListener - Encountered error on write
+org.springframework.dao.DataIntegrityViolationException: PreparedStatementCallback; SQL [insert into ADRESSE (id,city) values (?,?)]; Duplicate entry '1' for key 'PRIMARY'; nested exception is com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Duplicate entry '1' for key 'PRIMARY'
+	at org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator.doTranslate(SQLErrorCodeSQLExceptionTranslator.java:228)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:72)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:607)
+	at org.springframework.jdbc.core.JdbcTemplate.update(JdbcTemplate.java:792)
+	at org.springframework.jdbc.core.JdbcTemplate.update(JdbcTemplate.java:850)
+	at org.springframework.jdbc.core.JdbcTemplate.update(JdbcTemplate.java:858)
+	at com.cgi.batch.spring.PersonJdbcWriter.write(PersonJdbcWriter.java:49)
+	at org.springframework.batch.item.support.CompositeItemWriter.write(CompositeItemWriter.java:50)
+	at org.springframework.batch.core.step.item.SimpleChunkProcessor.writeItems(SimpleChunkProcessor.java:174)
+	at org.springframework.batch.core.step.item.SimpleChunkProcessor.doWrite(SimpleChunkProcessor.java:150)
+	at org.springframework.batch.core.step.item.FaultTolerantChunkProcessor$3.doWithRetry(FaultTolerantChunkProcessor.java:326)
+	at org.springframework.batch.retry.support.RetryTemplate.doExecute(RetryTemplate.java:240)
+	at org.springframework.batch.retry.support.RetryTemplate.execute(RetryTemplate.java:187)
+	at org.springframework.batch.core.step.item.BatchRetryTemplate.execute(BatchRetryTemplate.java:215)
+	at org.springframework.batch.core.step.item.FaultTolerantChunkProcessor.write(FaultTolerantChunkProcessor.java:417)
+	at org.springframework.batch.core.step.item.SimpleChunkProcessor.process(SimpleChunkProcessor.java:197)
+	at org.springframework.batch.core.step.item.ChunkOrientedTasklet.execute(ChunkOrientedTasklet.java:74)
+	at org.springframework.batch.core.step.tasklet.TaskletStep$ChunkTransactionCallback.doInTransaction(TaskletStep.java:386)
+	at org.springframework.transaction.support.TransactionTemplate.execute(TransactionTemplate.java:128)
+	at org.springframework.batch.core.step.tasklet.TaskletStep$2.doInChunkContext(TaskletStep.java:264)
+	at org.springframework.batch.core.scope.context.StepContextRepeatCallback.doInIteration(StepContextRepeatCallback.java:76)
+	at org.springframework.batch.repeat.support.RepeatTemplate.getNextResult(RepeatTemplate.java:367)
+	at org.springframework.batch.repeat.support.RepeatTemplate.executeInternal(RepeatTemplate.java:214)
+	at org.springframework.batch.repeat.support.RepeatTemplate.iterate(RepeatTemplate.java:143)
+	at org.springframework.batch.core.step.tasklet.TaskletStep.doExecute(TaskletStep.java:250)
+	at org.springframework.batch.core.step.AbstractStep.execute(AbstractStep.java:195)
+	at org.springframework.batch.core.job.SimpleStepHandler.handleStep(SimpleStepHandler.java:135)
+	at org.springframework.batch.core.job.flow.JobFlowExecutor.executeStep(JobFlowExecutor.java:61)
+	at org.springframework.batch.core.job.flow.support.state.StepState.handle(StepState.java:60)
+	at org.springframework.batch.core.job.flow.support.SimpleFlow.resume(SimpleFlow.java:144)
+	at org.springframework.batch.core.job.flow.support.SimpleFlow.start(SimpleFlow.java:124)
+	at org.springframework.batch.core.job.flow.FlowJob.doExecute(FlowJob.java:135)
+	at org.springframework.batch.core.job.AbstractJob.execute(AbstractJob.java:293)
+	at org.springframework.batch.core.launch.support.SimpleJobLauncher$1.run(SimpleJobLauncher.java:120)
+	at org.springframework.core.task.SyncTaskExecutor.execute(SyncTaskExecutor.java:49)
+	at org.springframework.batch.core.launch.support.SimpleJobLauncher.run(SimpleJobLauncher.java:114)
+	at com.cgi.batch.spring.BatchPersonne.main(BatchPersonne.java:37)
+Caused by: com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Duplicate entry '1' for key 'PRIMARY'
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:57)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:526)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:406)
+	at com.mysql.jdbc.Util.getInstance(Util.java:381)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:1015)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:956)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3491)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3423)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:1936)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2060)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2542)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1734)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2019)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:1937)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:1922)
+	at org.springframework.jdbc.core.JdbcTemplate$2.doInPreparedStatement(JdbcTemplate.java:798)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:591)
+	... 34 more
+ERROR: com.cgi.batch.spring.ItemFailureListener - ERROR for items : [[Personne [id=1, nom=DUPONT, prenom=Philippe, civilite=M]]]
+INFO : com.cgi.batch.spring.PersonProcessor - Call for process with personne : Personne [id=1, nom=DUPONT, prenom=Philippe, civilite=M]
+INFO : com.cgi.batch.spring.PersonProcessor - need to store personneInput : Personne [id=1, nom=DUPONT, prenom=Philippe, civilite=M]
+INFO : com.cgi.batch.spring.PersonJdbcWriter - Call for process with items : [Personne [id=1, nom=DUPONT, prenom=Philippe, civilite=M]]
+INFO : com.cgi.batch.spring.PersonJdbcWriter - Update done for personne id 1
+ERROR: com.cgi.batch.spring.ItemFailureListener - Encountered error on write
+org.springframework.dao.DataIntegrityViolationException: PreparedStatementCallback; SQL [insert into ADRESSE (id,city) values (?,?)]; Duplicate entry '1' for key 'PRIMARY'; nested exception is com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Duplicate entry '1' for key 'PRIMARY'
+	at org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator.doTranslate(SQLErrorCodeSQLExceptionTranslator.java:228)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:72)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:607)
+	at org.springframework.jdbc.core.JdbcTemplate.update(JdbcTemplate.java:792)
+	at org.springframework.jdbc.core.JdbcTemplate.update(JdbcTemplate.java:850)
+	at org.springframework.jdbc.core.JdbcTemplate.update(JdbcTemplate.java:858)
+	at com.cgi.batch.spring.PersonJdbcWriter.write(PersonJdbcWriter.java:49)
+	at org.springframework.batch.item.support.CompositeItemWriter.write(CompositeItemWriter.java:50)
+	at org.springframework.batch.core.step.item.SimpleChunkProcessor.writeItems(SimpleChunkProcessor.java:174)
+	at org.springframework.batch.core.step.item.FaultTolerantChunkProcessor.scan(FaultTolerantChunkProcessor.java:574)
+	at org.springframework.batch.core.step.item.FaultTolerantChunkProcessor.access$900(FaultTolerantChunkProcessor.java:50)
+	at org.springframework.batch.core.step.item.FaultTolerantChunkProcessor$5.recover(FaultTolerantChunkProcessor.java:407)
+	at org.springframework.batch.retry.support.RetryTemplate.handleRetryExhausted(RetryTemplate.java:420)
+	at org.springframework.batch.retry.support.RetryTemplate.doExecute(RetryTemplate.java:289)
+	at org.springframework.batch.retry.support.RetryTemplate.execute(RetryTemplate.java:187)
+	at org.springframework.batch.core.step.item.BatchRetryTemplate.execute(BatchRetryTemplate.java:215)
+	at org.springframework.batch.core.step.item.FaultTolerantChunkProcessor.write(FaultTolerantChunkProcessor.java:417)
+	at org.springframework.batch.core.step.item.SimpleChunkProcessor.process(SimpleChunkProcessor.java:197)
+	at org.springframework.batch.core.step.item.ChunkOrientedTasklet.execute(ChunkOrientedTasklet.java:74)
+	at org.springframework.batch.core.step.tasklet.TaskletStep$ChunkTransactionCallback.doInTransaction(TaskletStep.java:386)
+	at org.springframework.transaction.support.TransactionTemplate.execute(TransactionTemplate.java:128)
+	at org.springframework.batch.core.step.tasklet.TaskletStep$2.doInChunkContext(TaskletStep.java:264)
+	at org.springframework.batch.core.scope.context.StepContextRepeatCallback.doInIteration(StepContextRepeatCallback.java:76)
+	at org.springframework.batch.repeat.support.RepeatTemplate.getNextResult(RepeatTemplate.java:367)
+	at org.springframework.batch.repeat.support.RepeatTemplate.executeInternal(RepeatTemplate.java:214)
+	at org.springframework.batch.repeat.support.RepeatTemplate.iterate(RepeatTemplate.java:143)
+	at org.springframework.batch.core.step.tasklet.TaskletStep.doExecute(TaskletStep.java:250)
+	at org.springframework.batch.core.step.AbstractStep.execute(AbstractStep.java:195)
+	at org.springframework.batch.core.job.SimpleStepHandler.handleStep(SimpleStepHandler.java:135)
+	at org.springframework.batch.core.job.flow.JobFlowExecutor.executeStep(JobFlowExecutor.java:61)
+	at org.springframework.batch.core.job.flow.support.state.StepState.handle(StepState.java:60)
+	at org.springframework.batch.core.job.flow.support.SimpleFlow.resume(SimpleFlow.java:144)
+	at org.springframework.batch.core.job.flow.support.SimpleFlow.start(SimpleFlow.java:124)
+	at org.springframework.batch.core.job.flow.FlowJob.doExecute(FlowJob.java:135)
+	at org.springframework.batch.core.job.AbstractJob.execute(AbstractJob.java:293)
+	at org.springframework.batch.core.launch.support.SimpleJobLauncher$1.run(SimpleJobLauncher.java:120)
+	at org.springframework.core.task.SyncTaskExecutor.execute(SyncTaskExecutor.java:49)
+	at org.springframework.batch.core.launch.support.SimpleJobLauncher.run(SimpleJobLauncher.java:114)
+	at com.cgi.batch.spring.BatchPersonne.main(BatchPersonne.java:37)
+Caused by: com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Duplicate entry '1' for key 'PRIMARY'
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:57)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:526)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:406)
+	at com.mysql.jdbc.Util.getInstance(Util.java:381)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:1015)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:956)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3491)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3423)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:1936)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2060)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2542)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1734)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2019)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:1937)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:1922)
+	at org.springframework.jdbc.core.JdbcTemplate$2.doInPreparedStatement(JdbcTemplate.java:798)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:591)
+	... 36 more
+ERROR: com.cgi.batch.spring.ItemFailureListener - ERROR for items : [[Personne [id=1, nom=DUPONT, prenom=Philippe, civilite=M]]]
+INFO : com.cgi.batch.beans.Personne - new Personne with id 0
+INFO : com.cgi.batch.beans.Personne - new Personne with id 0
+INFO : com.cgi.batch.spring.PersonProcessor - Call for process with personne : Personne [id=3, nom=Gallois, prenom=Guillaume, civilite=M]
+INFO : com.cgi.batch.spring.PersonProcessor - need to store personneInput : Personne [id=3, nom=Gallois, prenom=Guillaume, civilite=M]
+INFO : com.cgi.batch.spring.PersonProcessor - Call for process with personne : Personne [id=4, nom=MARTIN, prenom=Cyril, civilite=M]
+INFO : com.cgi.batch.spring.PersonProcessor - need to store personneInput : Personne [id=4, nom=MARTIN, prenom=Cyril, civilite=M]
+INFO : com.cgi.batch.spring.PersonJdbcWriter - Call for process with items : [Personne [id=3, nom=Gallois, prenom=Guillaume, civilite=M], Personne [id=4, nom=MARTIN, prenom=Cyril, civilite=M]]
+INFO : com.cgi.batch.spring.PersonJdbcWriter - Update done for personne id 3
+ERROR: com.cgi.batch.spring.ItemFailureListener - Encountered error on write
+org.springframework.dao.DataIntegrityViolationException: PreparedStatementCallback; SQL [insert into ADRESSE (id,city) values (?,?)]; Duplicate entry '3' for key 'PRIMARY'; nested exception is com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Duplicate entry '3' for key 'PRIMARY'
+	at org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator.doTranslate(SQLErrorCodeSQLExceptionTranslator.java:228)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:72)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:607)
+	at org.springframework.jdbc.core.JdbcTemplate.update(JdbcTemplate.java:792)
+	at org.springframework.jdbc.core.JdbcTemplate.update(JdbcTemplate.java:850)
+	at org.springframework.jdbc.core.JdbcTemplate.update(JdbcTemplate.java:858)
+	at com.cgi.batch.spring.PersonJdbcWriter.write(PersonJdbcWriter.java:49)
+	at org.springframework.batch.item.support.CompositeItemWriter.write(CompositeItemWriter.java:50)
+	at org.springframework.batch.core.step.item.SimpleChunkProcessor.writeItems(SimpleChunkProcessor.java:174)
+	at org.springframework.batch.core.step.item.SimpleChunkProcessor.doWrite(SimpleChunkProcessor.java:150)
+	at org.springframework.batch.core.step.item.FaultTolerantChunkProcessor$3.doWithRetry(FaultTolerantChunkProcessor.java:326)
+	at org.springframework.batch.retry.support.RetryTemplate.doExecute(RetryTemplate.java:240)
+	at org.springframework.batch.retry.support.RetryTemplate.execute(RetryTemplate.java:187)
+	at org.springframework.batch.core.step.item.BatchRetryTemplate.execute(BatchRetryTemplate.java:215)
+	at org.springframework.batch.core.step.item.FaultTolerantChunkProcessor.write(FaultTolerantChunkProcessor.java:417)
+	at org.springframework.batch.core.step.item.SimpleChunkProcessor.process(SimpleChunkProcessor.java:197)
+	at org.springframework.batch.core.step.item.ChunkOrientedTasklet.execute(ChunkOrientedTasklet.java:74)
+	at org.springframework.batch.core.step.tasklet.TaskletStep$ChunkTransactionCallback.doInTransaction(TaskletStep.java:386)
+	at org.springframework.transaction.support.TransactionTemplate.execute(TransactionTemplate.java:128)
+	at org.springframework.batch.core.step.tasklet.TaskletStep$2.doInChunkContext(TaskletStep.java:264)
+	at org.springframework.batch.core.scope.context.StepContextRepeatCallback.doInIteration(StepContextRepeatCallback.java:76)
+	at org.springframework.batch.repeat.support.RepeatTemplate.getNextResult(RepeatTemplate.java:367)
+	at org.springframework.batch.repeat.support.RepeatTemplate.executeInternal(RepeatTemplate.java:214)
+	at org.springframework.batch.repeat.support.RepeatTemplate.iterate(RepeatTemplate.java:143)
+	at org.springframework.batch.core.step.tasklet.TaskletStep.doExecute(TaskletStep.java:250)
+	at org.springframework.batch.core.step.AbstractStep.execute(AbstractStep.java:195)
+	at org.springframework.batch.core.job.SimpleStepHandler.handleStep(SimpleStepHandler.java:135)
+	at org.springframework.batch.core.job.flow.JobFlowExecutor.executeStep(JobFlowExecutor.java:61)
+	at org.springframework.batch.core.job.flow.support.state.StepState.handle(StepState.java:60)
+	at org.springframework.batch.core.job.flow.support.SimpleFlow.resume(SimpleFlow.java:144)
+	at org.springframework.batch.core.job.flow.support.SimpleFlow.start(SimpleFlow.java:124)
+	at org.springframework.batch.core.job.flow.FlowJob.doExecute(FlowJob.java:135)
+	at org.springframework.batch.core.job.AbstractJob.execute(AbstractJob.java:293)
+	at org.springframework.batch.core.launch.support.SimpleJobLauncher$1.run(SimpleJobLauncher.java:120)
+	at org.springframework.core.task.SyncTaskExecutor.execute(SyncTaskExecutor.java:49)
+	at org.springframework.batch.core.launch.support.SimpleJobLauncher.run(SimpleJobLauncher.java:114)
+	at com.cgi.batch.spring.BatchPersonne.main(BatchPersonne.java:37)
+Caused by: com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Duplicate entry '3' for key 'PRIMARY'
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:57)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:526)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:406)
+	at com.mysql.jdbc.Util.getInstance(Util.java:381)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:1015)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:956)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3491)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3423)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:1936)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2060)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2542)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1734)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2019)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:1937)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:1922)
+	at org.springframework.jdbc.core.JdbcTemplate$2.doInPreparedStatement(JdbcTemplate.java:798)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:591)
+	... 34 more
+ERROR: com.cgi.batch.spring.ItemFailureListener - ERROR for items : [[Personne [id=3, nom=Gallois, prenom=Guillaume, civilite=M], Personne [id=4, nom=MARTIN, prenom=Cyril, civilite=M]]]
+INFO : com.cgi.batch.spring.PersonProcessor - Call for process with personne : Personne [id=3, nom=Gallois, prenom=Guillaume, civilite=M]
+INFO : com.cgi.batch.spring.PersonProcessor - need to store personneInput : Personne [id=3, nom=Gallois, prenom=Guillaume, civilite=M]
+INFO : com.cgi.batch.spring.PersonJdbcWriter - Call for process with items : [Personne [id=3, nom=Gallois, prenom=Guillaume, civilite=M]]
+INFO : com.cgi.batch.spring.PersonJdbcWriter - Update done for personne id 3
+ERROR: com.cgi.batch.spring.ItemFailureListener - Encountered error on write
+org.springframework.dao.DataIntegrityViolationException: PreparedStatementCallback; SQL [insert into ADRESSE (id,city) values (?,?)]; Duplicate entry '3' for key 'PRIMARY'; nested exception is com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Duplicate entry '3' for key 'PRIMARY'
+	at org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator.doTranslate(SQLErrorCodeSQLExceptionTranslator.java:228)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:72)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:607)
+	at org.springframework.jdbc.core.JdbcTemplate.update(JdbcTemplate.java:792)
+	at org.springframework.jdbc.core.JdbcTemplate.update(JdbcTemplate.java:850)
+	at org.springframework.jdbc.core.JdbcTemplate.update(JdbcTemplate.java:858)
+	at com.cgi.batch.spring.PersonJdbcWriter.write(PersonJdbcWriter.java:49)
+	at org.springframework.batch.item.support.CompositeItemWriter.write(CompositeItemWriter.java:50)
+	at org.springframework.batch.core.step.item.SimpleChunkProcessor.writeItems(SimpleChunkProcessor.java:174)
+	at org.springframework.batch.core.step.item.FaultTolerantChunkProcessor.scan(FaultTolerantChunkProcessor.java:574)
+	at org.springframework.batch.core.step.item.FaultTolerantChunkProcessor.access$900(FaultTolerantChunkProcessor.java:50)
+	at org.springframework.batch.core.step.item.FaultTolerantChunkProcessor$5.recover(FaultTolerantChunkProcessor.java:407)
+	at org.springframework.batch.retry.support.RetryTemplate.handleRetryExhausted(RetryTemplate.java:420)
+	at org.springframework.batch.retry.support.RetryTemplate.doExecute(RetryTemplate.java:289)
+	at org.springframework.batch.retry.support.RetryTemplate.execute(RetryTemplate.java:187)
+	at org.springframework.batch.core.step.item.BatchRetryTemplate.execute(BatchRetryTemplate.java:215)
+	at org.springframework.batch.core.step.item.FaultTolerantChunkProcessor.write(FaultTolerantChunkProcessor.java:417)
+	at org.springframework.batch.core.step.item.SimpleChunkProcessor.process(SimpleChunkProcessor.java:197)
+	at org.springframework.batch.core.step.item.ChunkOrientedTasklet.execute(ChunkOrientedTasklet.java:74)
+	at org.springframework.batch.core.step.tasklet.TaskletStep$ChunkTransactionCallback.doInTransaction(TaskletStep.java:386)
+	at org.springframework.transaction.support.TransactionTemplate.execute(TransactionTemplate.java:128)
+	at org.springframework.batch.core.step.tasklet.TaskletStep$2.doInChunkContext(TaskletStep.java:264)
+	at org.springframework.batch.core.scope.context.StepContextRepeatCallback.doInIteration(StepContextRepeatCallback.java:76)
+	at org.springframework.batch.repeat.support.RepeatTemplate.getNextResult(RepeatTemplate.java:367)
+	at org.springframework.batch.repeat.support.RepeatTemplate.executeInternal(RepeatTemplate.java:214)
+	at org.springframework.batch.repeat.support.RepeatTemplate.iterate(RepeatTemplate.java:143)
+	at org.springframework.batch.core.step.tasklet.TaskletStep.doExecute(TaskletStep.java:250)
+	at org.springframework.batch.core.step.AbstractStep.execute(AbstractStep.java:195)
+	at org.springframework.batch.core.job.SimpleStepHandler.handleStep(SimpleStepHandler.java:135)
+	at org.springframework.batch.core.job.flow.JobFlowExecutor.executeStep(JobFlowExecutor.java:61)
+	at org.springframework.batch.core.job.flow.support.state.StepState.handle(StepState.java:60)
+	at org.springframework.batch.core.job.flow.support.SimpleFlow.resume(SimpleFlow.java:144)
+	at org.springframework.batch.core.job.flow.support.SimpleFlow.start(SimpleFlow.java:124)
+	at org.springframework.batch.core.job.flow.FlowJob.doExecute(FlowJob.java:135)
+	at org.springframework.batch.core.job.AbstractJob.execute(AbstractJob.java:293)
+	at org.springframework.batch.core.launch.support.SimpleJobLauncher$1.run(SimpleJobLauncher.java:120)
+	at org.springframework.core.task.SyncTaskExecutor.execute(SyncTaskExecutor.java:49)
+	at org.springframework.batch.core.launch.support.SimpleJobLauncher.run(SimpleJobLauncher.java:114)
+	at com.cgi.batch.spring.BatchPersonne.main(BatchPersonne.java:37)
+Caused by: com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Duplicate entry '3' for key 'PRIMARY'
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:57)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:526)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:406)
+	at com.mysql.jdbc.Util.getInstance(Util.java:381)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:1015)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:956)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3491)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3423)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:1936)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2060)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2542)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1734)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2019)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:1937)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:1922)
+	at org.springframework.jdbc.core.JdbcTemplate$2.doInPreparedStatement(JdbcTemplate.java:798)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:591)
+	... 36 more
+ERROR: com.cgi.batch.spring.ItemFailureListener - ERROR for items : [[Personne [id=3, nom=Gallois, prenom=Guillaume, civilite=M]]]
+INFO : com.cgi.batch.spring.PersonProcessor - Call for process with personne : Personne [id=4, nom=MARTIN, prenom=Cyril, civilite=M]
+INFO : com.cgi.batch.spring.PersonProcessor - need to store personneInput : Personne [id=4, nom=MARTIN, prenom=Cyril, civilite=M]
+INFO : com.cgi.batch.spring.PersonJdbcWriter - Call for process with items : [Personne [id=4, nom=MARTIN, prenom=Cyril, civilite=M]]
+INFO : com.cgi.batch.spring.PersonJdbcWriter - Update done for personne id 4
+ERROR: com.cgi.batch.spring.ItemFailureListener - Encountered error on write
+org.springframework.dao.DataIntegrityViolationException: PreparedStatementCallback; SQL [insert into ADRESSE (id,city) values (?,?)]; Duplicate entry '4' for key 'PRIMARY'; nested exception is com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Duplicate entry '4' for key 'PRIMARY'
+	at org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator.doTranslate(SQLErrorCodeSQLExceptionTranslator.java:228)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:72)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:607)
+	at org.springframework.jdbc.core.JdbcTemplate.update(JdbcTemplate.java:792)
+	at org.springframework.jdbc.core.JdbcTemplate.update(JdbcTemplate.java:850)
+	at org.springframework.jdbc.core.JdbcTemplate.update(JdbcTemplate.java:858)
+	at com.cgi.batch.spring.PersonJdbcWriter.write(PersonJdbcWriter.java:49)
+	at org.springframework.batch.item.support.CompositeItemWriter.write(CompositeItemWriter.java:50)
+	at org.springframework.batch.core.step.item.SimpleChunkProcessor.writeItems(SimpleChunkProcessor.java:174)
+	at org.springframework.batch.core.step.item.FaultTolerantChunkProcessor.scan(FaultTolerantChunkProcessor.java:574)
+	at org.springframework.batch.core.step.item.FaultTolerantChunkProcessor.access$900(FaultTolerantChunkProcessor.java:50)
+	at org.springframework.batch.core.step.item.FaultTolerantChunkProcessor$3.doWithRetry(FaultTolerantChunkProcessor.java:344)
+	at org.springframework.batch.retry.support.RetryTemplate.doExecute(RetryTemplate.java:240)
+	at org.springframework.batch.retry.support.RetryTemplate.execute(RetryTemplate.java:187)
+	at org.springframework.batch.core.step.item.BatchRetryTemplate.execute(BatchRetryTemplate.java:215)
+	at org.springframework.batch.core.step.item.FaultTolerantChunkProcessor.write(FaultTolerantChunkProcessor.java:417)
+	at org.springframework.batch.core.step.item.SimpleChunkProcessor.process(SimpleChunkProcessor.java:197)
+	at org.springframework.batch.core.step.item.ChunkOrientedTasklet.execute(ChunkOrientedTasklet.java:74)
+	at org.springframework.batch.core.step.tasklet.TaskletStep$ChunkTransactionCallback.doInTransaction(TaskletStep.java:386)
+	at org.springframework.transaction.support.TransactionTemplate.execute(TransactionTemplate.java:128)
+	at org.springframework.batch.core.step.tasklet.TaskletStep$2.doInChunkContext(TaskletStep.java:264)
+	at org.springframework.batch.core.scope.context.StepContextRepeatCallback.doInIteration(StepContextRepeatCallback.java:76)
+	at org.springframework.batch.repeat.support.RepeatTemplate.getNextResult(RepeatTemplate.java:367)
+	at org.springframework.batch.repeat.support.RepeatTemplate.executeInternal(RepeatTemplate.java:214)
+	at org.springframework.batch.repeat.support.RepeatTemplate.iterate(RepeatTemplate.java:143)
+	at org.springframework.batch.core.step.tasklet.TaskletStep.doExecute(TaskletStep.java:250)
+	at org.springframework.batch.core.step.AbstractStep.execute(AbstractStep.java:195)
+	at org.springframework.batch.core.job.SimpleStepHandler.handleStep(SimpleStepHandler.java:135)
+	at org.springframework.batch.core.job.flow.JobFlowExecutor.executeStep(JobFlowExecutor.java:61)
+	at org.springframework.batch.core.job.flow.support.state.StepState.handle(StepState.java:60)
+	at org.springframework.batch.core.job.flow.support.SimpleFlow.resume(SimpleFlow.java:144)
+	at org.springframework.batch.core.job.flow.support.SimpleFlow.start(SimpleFlow.java:124)
+	at org.springframework.batch.core.job.flow.FlowJob.doExecute(FlowJob.java:135)
+	at org.springframework.batch.core.job.AbstractJob.execute(AbstractJob.java:293)
+	at org.springframework.batch.core.launch.support.SimpleJobLauncher$1.run(SimpleJobLauncher.java:120)
+	at org.springframework.core.task.SyncTaskExecutor.execute(SyncTaskExecutor.java:49)
+	at org.springframework.batch.core.launch.support.SimpleJobLauncher.run(SimpleJobLauncher.java:114)
+	at com.cgi.batch.spring.BatchPersonne.main(BatchPersonne.java:37)
+Caused by: com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Duplicate entry '4' for key 'PRIMARY'
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:57)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:526)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:406)
+	at com.mysql.jdbc.Util.getInstance(Util.java:381)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:1015)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:956)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3491)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3423)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:1936)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2060)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2542)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1734)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2019)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:1937)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:1922)
+	at org.springframework.jdbc.core.JdbcTemplate$2.doInPreparedStatement(JdbcTemplate.java:798)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:591)
+	... 35 more
+ERROR: com.cgi.batch.spring.ItemFailureListener - ERROR for items : [[Personne [id=4, nom=MARTIN, prenom=Cyril, civilite=M]]]
+INFO : com.cgi.batch.beans.Personne - new Personne with id 0
+INFO : com.cgi.batch.beans.Personne - new Personne with id 0
+INFO : com.cgi.batch.spring.PersonProcessor - Call for process with personne : Personne [id=5, nom=MICHEL, prenom=Sophie, civilite=Mme]
+INFO : com.cgi.batch.spring.PersonProcessor - Call for process with personne : Personne [id=6, nom=MERCIER, prenom=Muriel, civilite=Mme]
+INFO : com.cgi.batch.spring.PersonJdbcWriter - Call for process with items : []
+INFO : com.cgi.batch.beans.Personne - new Personne with id 0
+INFO : com.cgi.batch.beans.Personne - new Personne with id 0
+INFO : com.cgi.batch.spring.PersonProcessor - Call for process with personne : Personne [id=7, nom=VIDAL, prenom=Thomas, civilite=M]
+INFO : com.cgi.batch.spring.PersonProcessor - need to store personneInput : Personne [id=7, nom=VIDAL, prenom=Thomas, civilite=M]
+INFO : com.cgi.batch.spring.PersonProcessor - Call for process with personne : Personne [id=8, nom=JACKSON, prenom=Michael, civilite=M]
+INFO : com.cgi.batch.spring.PersonProcessor - need to store personneInput : Personne [id=8, nom=JACKSON, prenom=Michael, civilite=M]
+INFO : com.cgi.batch.spring.PersonJdbcWriter - Call for process with items : [Personne [id=7, nom=VIDAL, prenom=Thomas, civilite=M], Personne [id=8, nom=JACKSON, prenom=Michael, civilite=M]]
+INFO : com.cgi.batch.spring.PersonJdbcWriter - Update done for personne id 7
+ERROR: com.cgi.batch.spring.ItemFailureListener - Encountered error on write
+org.springframework.dao.DataIntegrityViolationException: PreparedStatementCallback; SQL [insert into ADRESSE (id,city) values (?,?)]; Duplicate entry '7' for key 'PRIMARY'; nested exception is com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Duplicate entry '7' for key 'PRIMARY'
+	at org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator.doTranslate(SQLErrorCodeSQLExceptionTranslator.java:228)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:72)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:607)
+	at org.springframework.jdbc.core.JdbcTemplate.update(JdbcTemplate.java:792)
+	at org.springframework.jdbc.core.JdbcTemplate.update(JdbcTemplate.java:850)
+	at org.springframework.jdbc.core.JdbcTemplate.update(JdbcTemplate.java:858)
+	at com.cgi.batch.spring.PersonJdbcWriter.write(PersonJdbcWriter.java:49)
+	at org.springframework.batch.item.support.CompositeItemWriter.write(CompositeItemWriter.java:50)
+	at org.springframework.batch.core.step.item.SimpleChunkProcessor.writeItems(SimpleChunkProcessor.java:174)
+	at org.springframework.batch.core.step.item.SimpleChunkProcessor.doWrite(SimpleChunkProcessor.java:150)
+	at org.springframework.batch.core.step.item.FaultTolerantChunkProcessor$3.doWithRetry(FaultTolerantChunkProcessor.java:326)
+	at org.springframework.batch.retry.support.RetryTemplate.doExecute(RetryTemplate.java:240)
+	at org.springframework.batch.retry.support.RetryTemplate.execute(RetryTemplate.java:187)
+	at org.springframework.batch.core.step.item.BatchRetryTemplate.execute(BatchRetryTemplate.java:215)
+	at org.springframework.batch.core.step.item.FaultTolerantChunkProcessor.write(FaultTolerantChunkProcessor.java:417)
+	at org.springframework.batch.core.step.item.SimpleChunkProcessor.process(SimpleChunkProcessor.java:197)
+	at org.springframework.batch.core.step.item.ChunkOrientedTasklet.execute(ChunkOrientedTasklet.java:74)
+	at org.springframework.batch.core.step.tasklet.TaskletStep$ChunkTransactionCallback.doInTransaction(TaskletStep.java:386)
+	at org.springframework.transaction.support.TransactionTemplate.execute(TransactionTemplate.java:128)
+	at org.springframework.batch.core.step.tasklet.TaskletStep$2.doInChunkContext(TaskletStep.java:264)
+	at org.springframework.batch.core.scope.context.StepContextRepeatCallback.doInIteration(StepContextRepeatCallback.java:76)
+	at org.springframework.batch.repeat.support.RepeatTemplate.getNextResult(RepeatTemplate.java:367)
+	at org.springframework.batch.repeat.support.RepeatTemplate.executeInternal(RepeatTemplate.java:214)
+	at org.springframework.batch.repeat.support.RepeatTemplate.iterate(RepeatTemplate.java:143)
+	at org.springframework.batch.core.step.tasklet.TaskletStep.doExecute(TaskletStep.java:250)
+	at org.springframework.batch.core.step.AbstractStep.execute(AbstractStep.java:195)
+	at org.springframework.batch.core.job.SimpleStepHandler.handleStep(SimpleStepHandler.java:135)
+	at org.springframework.batch.core.job.flow.JobFlowExecutor.executeStep(JobFlowExecutor.java:61)
+	at org.springframework.batch.core.job.flow.support.state.StepState.handle(StepState.java:60)
+	at org.springframework.batch.core.job.flow.support.SimpleFlow.resume(SimpleFlow.java:144)
+	at org.springframework.batch.core.job.flow.support.SimpleFlow.start(SimpleFlow.java:124)
+	at org.springframework.batch.core.job.flow.FlowJob.doExecute(FlowJob.java:135)
+	at org.springframework.batch.core.job.AbstractJob.execute(AbstractJob.java:293)
+	at org.springframework.batch.core.launch.support.SimpleJobLauncher$1.run(SimpleJobLauncher.java:120)
+	at org.springframework.core.task.SyncTaskExecutor.execute(SyncTaskExecutor.java:49)
+	at org.springframework.batch.core.launch.support.SimpleJobLauncher.run(SimpleJobLauncher.java:114)
+	at com.cgi.batch.spring.BatchPersonne.main(BatchPersonne.java:37)
+Caused by: com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Duplicate entry '7' for key 'PRIMARY'
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:57)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:526)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:406)
+	at com.mysql.jdbc.Util.getInstance(Util.java:381)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:1015)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:956)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3491)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3423)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:1936)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2060)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2542)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1734)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2019)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:1937)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:1922)
+	at org.springframework.jdbc.core.JdbcTemplate$2.doInPreparedStatement(JdbcTemplate.java:798)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:591)
+	... 34 more
+ERROR: com.cgi.batch.spring.ItemFailureListener - ERROR for items : [[Personne [id=7, nom=VIDAL, prenom=Thomas, civilite=M], Personne [id=8, nom=JACKSON, prenom=Michael, civilite=M]]]
+INFO : com.cgi.batch.spring.PersonProcessor - Call for process with personne : Personne [id=7, nom=VIDAL, prenom=Thomas, civilite=M]
+INFO : com.cgi.batch.spring.PersonProcessor - need to store personneInput : Personne [id=7, nom=VIDAL, prenom=Thomas, civilite=M]
+INFO : com.cgi.batch.spring.PersonJdbcWriter - Call for process with items : [Personne [id=7, nom=VIDAL, prenom=Thomas, civilite=M]]
+INFO : com.cgi.batch.spring.PersonJdbcWriter - Update done for personne id 7
+ERROR: com.cgi.batch.spring.ItemFailureListener - Encountered error on write
+org.springframework.dao.DataIntegrityViolationException: PreparedStatementCallback; SQL [insert into ADRESSE (id,city) values (?,?)]; Duplicate entry '7' for key 'PRIMARY'; nested exception is com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Duplicate entry '7' for key 'PRIMARY'
+	at org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator.doTranslate(SQLErrorCodeSQLExceptionTranslator.java:228)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:72)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:607)
+	at org.springframework.jdbc.core.JdbcTemplate.update(JdbcTemplate.java:792)
+	at org.springframework.jdbc.core.JdbcTemplate.update(JdbcTemplate.java:850)
+	at org.springframework.jdbc.core.JdbcTemplate.update(JdbcTemplate.java:858)
+	at com.cgi.batch.spring.PersonJdbcWriter.write(PersonJdbcWriter.java:49)
+	at org.springframework.batch.item.support.CompositeItemWriter.write(CompositeItemWriter.java:50)
+	at org.springframework.batch.core.step.item.SimpleChunkProcessor.writeItems(SimpleChunkProcessor.java:174)
+	at org.springframework.batch.core.step.item.FaultTolerantChunkProcessor.scan(FaultTolerantChunkProcessor.java:574)
+	at org.springframework.batch.core.step.item.FaultTolerantChunkProcessor.access$900(FaultTolerantChunkProcessor.java:50)
+	at org.springframework.batch.core.step.item.FaultTolerantChunkProcessor$5.recover(FaultTolerantChunkProcessor.java:407)
+	at org.springframework.batch.retry.support.RetryTemplate.handleRetryExhausted(RetryTemplate.java:420)
+	at org.springframework.batch.retry.support.RetryTemplate.doExecute(RetryTemplate.java:289)
+	at org.springframework.batch.retry.support.RetryTemplate.execute(RetryTemplate.java:187)
+	at org.springframework.batch.core.step.item.BatchRetryTemplate.execute(BatchRetryTemplate.java:215)
+	at org.springframework.batch.core.step.item.FaultTolerantChunkProcessor.write(FaultTolerantChunkProcessor.java:417)
+	at org.springframework.batch.core.step.item.SimpleChunkProcessor.process(SimpleChunkProcessor.java:197)
+	at org.springframework.batch.core.step.item.ChunkOrientedTasklet.execute(ChunkOrientedTasklet.java:74)
+	at org.springframework.batch.core.step.tasklet.TaskletStep$ChunkTransactionCallback.doInTransaction(TaskletStep.java:386)
+	at org.springframework.transaction.support.TransactionTemplate.execute(TransactionTemplate.java:128)
+	at org.springframework.batch.core.step.tasklet.TaskletStep$2.doInChunkContext(TaskletStep.java:264)
+	at org.springframework.batch.core.scope.context.StepContextRepeatCallback.doInIteration(StepContextRepeatCallback.java:76)
+	at org.springframework.batch.repeat.support.RepeatTemplate.getNextResult(RepeatTemplate.java:367)
+	at org.springframework.batch.repeat.support.RepeatTemplate.executeInternal(RepeatTemplate.java:214)
+	at org.springframework.batch.repeat.support.RepeatTemplate.iterate(RepeatTemplate.java:143)
+	at org.springframework.batch.core.step.tasklet.TaskletStep.doExecute(TaskletStep.java:250)
+	at org.springframework.batch.core.step.AbstractStep.execute(AbstractStep.java:195)
+	at org.springframework.batch.core.job.SimpleStepHandler.handleStep(SimpleStepHandler.java:135)
+	at org.springframework.batch.core.job.flow.JobFlowExecutor.executeStep(JobFlowExecutor.java:61)
+	at org.springframework.batch.core.job.flow.support.state.StepState.handle(StepState.java:60)
+	at org.springframework.batch.core.job.flow.support.SimpleFlow.resume(SimpleFlow.java:144)
+	at org.springframework.batch.core.job.flow.support.SimpleFlow.start(SimpleFlow.java:124)
+	at org.springframework.batch.core.job.flow.FlowJob.doExecute(FlowJob.java:135)
+	at org.springframework.batch.core.job.AbstractJob.execute(AbstractJob.java:293)
+	at org.springframework.batch.core.launch.support.SimpleJobLauncher$1.run(SimpleJobLauncher.java:120)
+	at org.springframework.core.task.SyncTaskExecutor.execute(SyncTaskExecutor.java:49)
+	at org.springframework.batch.core.launch.support.SimpleJobLauncher.run(SimpleJobLauncher.java:114)
+	at com.cgi.batch.spring.BatchPersonne.main(BatchPersonne.java:37)
+Caused by: com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Duplicate entry '7' for key 'PRIMARY'
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:57)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:526)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:406)
+	at com.mysql.jdbc.Util.getInstance(Util.java:381)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:1015)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:956)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3491)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3423)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:1936)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2060)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2542)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1734)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2019)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:1937)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:1922)
+	at org.springframework.jdbc.core.JdbcTemplate$2.doInPreparedStatement(JdbcTemplate.java:798)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:591)
+	... 36 more
+ERROR: com.cgi.batch.spring.ItemFailureListener - ERROR for items : [[Personne [id=7, nom=VIDAL, prenom=Thomas, civilite=M]]]
+INFO : com.cgi.batch.spring.PersonProcessor - Call for process with personne : Personne [id=8, nom=JACKSON, prenom=Michael, civilite=M]
+INFO : com.cgi.batch.spring.PersonProcessor - need to store personneInput : Personne [id=8, nom=JACKSON, prenom=Michael, civilite=M]
+INFO : com.cgi.batch.spring.PersonJdbcWriter - Call for process with items : [Personne [id=8, nom=JACKSON, prenom=Michael, civilite=M]]
+INFO : com.cgi.batch.spring.PersonJdbcWriter - Update done for personne id 8
+ERROR: com.cgi.batch.spring.ItemFailureListener - Encountered error on write
+org.springframework.dao.DataIntegrityViolationException: PreparedStatementCallback; SQL [insert into ADRESSE (id,city) values (?,?)]; Duplicate entry '8' for key 'PRIMARY'; nested exception is com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Duplicate entry '8' for key 'PRIMARY'
+	at org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator.doTranslate(SQLErrorCodeSQLExceptionTranslator.java:228)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:72)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:607)
+	at org.springframework.jdbc.core.JdbcTemplate.update(JdbcTemplate.java:792)
+	at org.springframework.jdbc.core.JdbcTemplate.update(JdbcTemplate.java:850)
+	at org.springframework.jdbc.core.JdbcTemplate.update(JdbcTemplate.java:858)
+	at com.cgi.batch.spring.PersonJdbcWriter.write(PersonJdbcWriter.java:49)
+	at org.springframework.batch.item.support.CompositeItemWriter.write(CompositeItemWriter.java:50)
+	at org.springframework.batch.core.step.item.SimpleChunkProcessor.writeItems(SimpleChunkProcessor.java:174)
+	at org.springframework.batch.core.step.item.FaultTolerantChunkProcessor.scan(FaultTolerantChunkProcessor.java:574)
+	at org.springframework.batch.core.step.item.FaultTolerantChunkProcessor.access$900(FaultTolerantChunkProcessor.java:50)
+	at org.springframework.batch.core.step.item.FaultTolerantChunkProcessor$3.doWithRetry(FaultTolerantChunkProcessor.java:344)
+	at org.springframework.batch.retry.support.RetryTemplate.doExecute(RetryTemplate.java:240)
+	at org.springframework.batch.retry.support.RetryTemplate.execute(RetryTemplate.java:187)
+	at org.springframework.batch.core.step.item.BatchRetryTemplate.execute(BatchRetryTemplate.java:215)
+	at org.springframework.batch.core.step.item.FaultTolerantChunkProcessor.write(FaultTolerantChunkProcessor.java:417)
+	at org.springframework.batch.core.step.item.SimpleChunkProcessor.process(SimpleChunkProcessor.java:197)
+	at org.springframework.batch.core.step.item.ChunkOrientedTasklet.execute(ChunkOrientedTasklet.java:74)
+	at org.springframework.batch.core.step.tasklet.TaskletStep$ChunkTransactionCallback.doInTransaction(TaskletStep.java:386)
+	at org.springframework.transaction.support.TransactionTemplate.execute(TransactionTemplate.java:128)
+	at org.springframework.batch.core.step.tasklet.TaskletStep$2.doInChunkContext(TaskletStep.java:264)
+	at org.springframework.batch.core.scope.context.StepContextRepeatCallback.doInIteration(StepContextRepeatCallback.java:76)
+	at org.springframework.batch.repeat.support.RepeatTemplate.getNextResult(RepeatTemplate.java:367)
+	at org.springframework.batch.repeat.support.RepeatTemplate.executeInternal(RepeatTemplate.java:214)
+	at org.springframework.batch.repeat.support.RepeatTemplate.iterate(RepeatTemplate.java:143)
+	at org.springframework.batch.core.step.tasklet.TaskletStep.doExecute(TaskletStep.java:250)
+	at org.springframework.batch.core.step.AbstractStep.execute(AbstractStep.java:195)
+	at org.springframework.batch.core.job.SimpleStepHandler.handleStep(SimpleStepHandler.java:135)
+	at org.springframework.batch.core.job.flow.JobFlowExecutor.executeStep(JobFlowExecutor.java:61)
+	at org.springframework.batch.core.job.flow.support.state.StepState.handle(StepState.java:60)
+	at org.springframework.batch.core.job.flow.support.SimpleFlow.resume(SimpleFlow.java:144)
+	at org.springframework.batch.core.job.flow.support.SimpleFlow.start(SimpleFlow.java:124)
+	at org.springframework.batch.core.job.flow.FlowJob.doExecute(FlowJob.java:135)
+	at org.springframework.batch.core.job.AbstractJob.execute(AbstractJob.java:293)
+	at org.springframework.batch.core.launch.support.SimpleJobLauncher$1.run(SimpleJobLauncher.java:120)
+	at org.springframework.core.task.SyncTaskExecutor.execute(SyncTaskExecutor.java:49)
+	at org.springframework.batch.core.launch.support.SimpleJobLauncher.run(SimpleJobLauncher.java:114)
+	at com.cgi.batch.spring.BatchPersonne.main(BatchPersonne.java:37)
+Caused by: com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Duplicate entry '8' for key 'PRIMARY'
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:57)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:526)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:406)
+	at com.mysql.jdbc.Util.getInstance(Util.java:381)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:1015)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:956)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3491)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3423)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:1936)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2060)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2542)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1734)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2019)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:1937)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:1922)
+	at org.springframework.jdbc.core.JdbcTemplate$2.doInPreparedStatement(JdbcTemplate.java:798)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:591)
+	... 35 more
+ERROR: com.cgi.batch.spring.ItemFailureListener - ERROR for items : [[Personne [id=8, nom=JACKSON, prenom=Michael, civilite=M]]]
+INFO : com.cgi.batch.beans.Personne - new Personne with id 0
+INFO : com.cgi.batch.beans.Personne - new Personne with id 0
+INFO : com.cgi.batch.spring.PersonProcessor - Call for process with personne : Personne [id=9, nom=BROWN, prenom=Michele, civilite=Mme]
+INFO : com.cgi.batch.spring.PersonProcessor - Call for process with personne : Personne [id=10, nom=WILLIAMS, prenom=Venus, civilite=Mme]
+INFO : com.cgi.batch.spring.PersonJdbcWriter - Call for process with items : []
+INFO : com.cgi.batch.spring.BatchPersonne - Fin du batch ... at Wed Apr 01 13:22:50 CEST 2015
+INFO : com.cgi.batch.spring.BatchPersonne - ##### JobExecution : JobExecution: id=0, version=2, startTime=Wed Apr 01 13:22:50 CEST 2015, endTime=Wed Apr 01 13:22:50 CEST 2015, lastUpdated=Wed Apr 01 13:22:50 CEST 2015, status=COMPLETED, exitStatus=exitCode=COMPLETED;exitDescription=, job=[JobInstance: id=0, version=0, JobParameters=[{date=1427887370048}], Job=[importPersonnes]]
+INFO : com.cgi.batch.spring.BatchPersonne - ##### Exit Status : COMPLETED
+INFO : com.cgi.batch.spring.BatchPersonne - ##### Failure Exceptions : []
+
+=>
+Caused by: com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Duplicate entry '3' for key 'PRIMARY'
+apparaît bien 2 fois

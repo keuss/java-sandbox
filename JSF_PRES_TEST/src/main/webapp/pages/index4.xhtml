@@ -1,0 +1,79 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich" template="/layout/layout.xhtml">
+
+	<ui:define name="title">Login Page</ui:define>
+	<ui:define name="content">
+	
+	<!-- test modal -->
+	<ui:include src="/pages/docViewerModalPanel.xhtml" />
+	
+		<script type="text/javascript">
+		
+			var currentIdDoc = null;
+			var paramServeur = null;
+			
+			// The custom openwinBis action (used data)
+			function openwinBis(url,title,param) {
+				alert('Call for openwinBis ... param:'+param.myParamTest+' and '+param.otherParamTest);
+				var height = screen.availHeight-100
+				windowProperties = 'toolbar=no,menubar=no,resizable=yes,scrollbars=yes,statusbar=no,top=0';
+				windowProperties += ',height='+ height;
+				windowProperties += ',width=' + screen.availWidth*2/3;
+				windowProperties += ',left='+ screen.availWidth/3;
+				if(!window.ifChildWindow) {
+					// si la la fnêtre n'est pas déjà ouverte : false par défaut
+					window.childWindow = window.open(url,title,windowProperties);
+					// save current usefull data
+					currentIdDoc = param.myParamTest;
+					window.ifChildWindow = true;
+				} else {
+					window.childWindow.testJSChild('KOKOU');
+				}
+			}
+			
+			// The custom openwin action
+			function openwin(url,title,param) {
+				alert('call for openwin ...');
+				var height = screen.availHeight-100
+				windowProperties = 'toolbar=no,menubar=no,resizable=yes,scrollbars=yes,statusbar=no,top=0';
+				windowProperties += ',height='+ height;
+				windowProperties += ',width=' + screen.availWidth*2/3;
+				windowProperties += ',left='+ screen.availWidth/3;
+				if(!window.ifChildWindow) {
+					// si la la fnêtre n'est pas déjà ouverte : false par défaut
+					window.childWindow = window.open(url,title,windowProperties);
+					currentIdDoc = param;
+					window.ifChildWindow = true;
+				} else {
+					window.childWindow.testJSChild('KOKOU');
+				}
+			}
+			
+			// Call JS function with global var childWindow and currentIdDoc
+			function doActionInChild() {
+				window.childWindow.testJSChild(currentIdDoc);
+			}
+			
+			// the unique chil window if closed
+			function closedChild() {
+				alert('closedChild');
+				window.ifChildWindow = false;
+			}
+			
+		</script>
+	
+		<h:form id="userFrom4" prependId="false">
+			
+			<h:commandButton type="button" value="test jsFunction get" onclick="javascript:myFunctionPerso();" />  
+			
+			<a4j:jsFunction id="myFunctionPersoId" name="myFunctionPerso" data="#{modalTestAction}" oncomplete="alert(data.myParamTest+' and '+data.otherParamTest);return false;">  
+			</a4j:jsFunction>
+			
+			<br /><br />
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	template="/layout/layout.xhtml">
+	<ui:define name="title">Cars Page</ui:define>
+	<ui:define name="content">
+		<f:view>
+		    <h:form id="form">
+				<rich:tabPanel id="tabPanelCars" switchType="client">
+					<rich:tab id="carPanel" label="Cars">
+
+					
+				        <rich:dataTable value="#{carsBean.allInventoryItems}"
+							var="car" id="table" rows="10"
+							styleClass="b_thin b_collapse padding_small">
+
+							<a4j:support event="onRowClick"
+								action="#{carActions.toggleItemSelectedActionListener}"
+								requestDelay="100" reRender="table">
+								<f:setPropertyActionListener
+									target="#{carsBean2.selectedItem}" value="#{car}" />
+							</a4j:support>
+
+							<!-- Colonne permettant d'afficher des cases de selection pour chaque ligne -->
+							<rich:column sortable="false" id="col_1" width="25px">
+								<f:facet name="header">
+									<h:panelGrid>
+										<h:outputText value="Selectioner " />
+									</h:panelGrid>
+								</f:facet>
+								<h:selectBooleanCheckbox id="boxes" value="#{car.selected}"
+									readonly="true">
+								</h:selectBooleanCheckbox>
+							</rich:column>
+				            <rich:column
+								filterValue="#{carsFilteringBean.vendorFilter}"
+								filterExpression="#{fn:containsIgnoreCase(car.vendor, carsFilteringBean.vendorFilter)}">
+								<f:facet name="header">
+									<h:panelGrid>
+										<h:outputText value="Vendor " />
+										<h:selectOneMenu value="#{carsFilteringBean.vendorFilter}">
+											<f:selectItems value="#{carsBean.vendorOptions}" />
+											<a4j:support reRender="table" event="onchange" />
+										</h:selectOneMenu>
+									</h:panelGrid>
+								</f:facet>
+				                <h:outputText value="#{car.vendor}" />
+				            </rich:column>
+				            <rich:column>
+				                <f:facet name="header">
+									<h:panelGrid>
+										<h:outputText value="Model " />
+									</h:panelGrid>
+								</f:facet>
+				                <h:outputText value="#{car.model}" />
+				            </rich:column>
+				            <rich:column>
+				                <f:facet name="header">
+									<h:panelGrid>
+										<h:outputText value="Price " />
+									</h:panelGrid>
+								</f:facet>
+				                <h:outputText value="#{car.price}" />
+				            </rich:column>
+							<!-- 				            <rich:column -->
+							<!-- 								filterValue="#{carsFilteringBean.mileageFilter}" -->
+							<!-- 								filterExpression="#{fn:containsIgnoreCase(car.mileage, carsFilteringBean.mileageFilter)}"> -->
+							<!-- 								<f:facet name="header"> -->
+							<!-- 									<h:panelGrid> -->
+							<!-- 										<h:outputText value="Mileage " /> -->
+							<!-- 										<h:inputText value="#{carsFilteringBean.mileageFilter}"> -->
+							<!-- 											<f:convertNumber groupingUsed="true" /> -->
+							<!-- 											<f:validateLongRange maximum="500000" /> -->
+							<!-- 											<a4j:support event="onblur" reRender="table" /> -->
+							<!-- 										</h:inputText> -->
+							<!-- 									</h:panelGrid> -->
+							<!-- 								</f:facet> -->
+							<!-- 				                <h:outputText value="#{car.mileage}" /> -->
+							<!-- 				            </rich:column> -->
+				            <rich:column
+								filterValue="#{carsFilteringBean.vinFilter}"
+								filterExpression="#{fn:containsIgnoreCase(car.vin, carsFilteringBean.vinFilter)}">
+				                 <f:facet name="header">
+									<h:panelGrid>
+										<h:outputText value="VIM " />
+										<h:inputText value="#{carsFilteringBean.vinFilter}">
+											<a4j:support event="onblur" reRender="table" />
+										</h:inputText>
+									</h:panelGrid>
+								</f:facet>
+				                <h:outputText value="#{car.vin}" />
+				            </rich:column>
+							<rich:column filterValue="#{carsFilteringBean.dateFilter}"
+								filterExpression="#{fn:containsIgnoreCase(car.date, carsFilteringBean.dateFilter)}">
+				                 <f:facet name="header">
+									<h:panelGrid>
+										<h:outputText value="DATE " />
+										<rich:calendar datePattern="dd/MM/yyyy" inputSize="8"
+											value="#{carsFilteringBean.dateFilter}"
+											onclick="Event.stop(event);">
+											<a4j:support event="onchanged" reRender="table" />
+										</rich:calendar>
+									</h:panelGrid>
+								</f:facet>
+				                <h:outputText value="#{car.date}">
+									<f:convertDateTime pattern="dd/MM/yyyy" timeZone="Europe/Paris" />
+								</h:outputText>
+				            </rich:column>
+							<f:facet name="footer">
+								<rich:datascroller align="center" for="table" maxPages="5"
+									fastControls="hide">
+									<f:facet name="previous">
+										<h:outputText value="«" />
+									</f:facet>
+									<f:facet name="next">
+										<h:outputText value="»" />
+									</f:facet>
+								</rich:datascroller>
+							</f:facet>
+				        </rich:dataTable>
+					</rich:tab>
+				</rich:tabPanel>
+		    </h:form>
+		</f:view>
+	</ui:define>
+</ui:composition>

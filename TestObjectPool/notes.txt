@@ -1,0 +1,35 @@
+http://java.dzone.com/articles/creating-object-pool-java
+
+In this post, we will take a look at how we can create an object pool in Java. 
+
+In recent times, JVM performance has been multiplied manifold and so object creation is no longer considered as expensive as it was done earlier. But there are few objects, for which creation of new object still seems to be slight costly as they are not considered as lightweight objects. e.g.: database connection objects, parser objects, thread creation etc. In any application we need to create multiple such objects. Since creation of such objects is costly, it’s a sure hit for the performance of any application. It would be great if we can reuse the same object again and again. 
+
+Object Pools are used for this purpose. Basically, object pools can be visualized as a storage where we can store such objects so that stored objects can be used and reused dynamically. Object pools also controls the life-cycle of pooled objects. 
+
+As we understood the requirement, let’s come to real stuff. Fortunately, there are various open source object pooling frameworks available, so we do not need to reinvent the wheel. 
+
+In this post we will be using apache commons pool  to create our own object pool. At the time of writing this post Version 2.2 is the latest, so let us use this. 
+
+The basic thing we need to create is- 
+ 1. A pool to store heavyweight objects (pooled objects). 
+ 2. A simple interface, so that client can - 
+    a.) Borrow pooled object for its use. 
+    b.) Return the borrowed object after its use. 
+    
+    
+org.apache.commons.pool2.PooledObjectFactory<T> =>
+
+
+An interface defining life-cycle methods for instances to be served by an ObjectPool. 
+
+By contract, when an ObjectPool delegates to a PooledObjectFactory, 
+
+makeObject is called whenever a new instance is needed. 
+activateObject is invoked on every instance that has been passivated before it is borrowed from the pool. 
+validateObject may be invoked on activated instances to make sure they can be borrowed from the pool. validateObject may also be used to test an instance being returned to the pool before it is passivated. It will only be invoked on an activated instance. 
+passivateObject is invoked on every instance when it is returned to the pool. 
+destroyObject is invoked on every instance when it is being "dropped" from the pool (whether due to the response from validateObject, or for reasons specific to the pool implementation.) There is no guarantee that the instance being destroyed will be considered active, passive or in a generally consistent state. 
+PooledObjectFactory must be thread-safe. The only promise an ObjectPool makes is that the same instance of an object will not be passed to more than one method of a PoolableObjectFactory at a time. 
+While clients of a KeyedObjectPool borrow and return instances of the underlying value type V, the factory methods act on instances of PooledObject<V>. These are the object wrappers that pools use to track and maintain state information about the objects that they manage.
+
+    

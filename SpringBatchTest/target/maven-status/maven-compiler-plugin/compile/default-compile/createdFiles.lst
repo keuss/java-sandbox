@@ -1,0 +1,4 @@
+com\cgi\batch\spring\PersonProcessor.class
+com\cgi\batch\spring\BatchPersonne.class
+com\cgi\batch\beans\Personne.class
+com\cgi\batch\spring\PersonJdbcWriter.class

@@ -1,0 +1,61 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich" template="/layout/layout.xhtml">
+
+
+	<ui:define name="title">Login Page</ui:define>
+	<ui:define name="content">
+	
+		<script type="text/javascript">
+		
+			function testDate() {
+				var date = new Date();
+				var ms = date.getMilliseconds();
+				//après le f:setPropertyActionListener bien sûr !
+				//alert('date : '+date+',  and ms : '+ms);
+			}
+
+		</script>
+	
+		<h:form id="userFrom" prependId="false">
+			<h:panelGrid columns="2">
+
+				<h:outputLabel value="#{label.login}" />
+				<h:inputText id="j_username" value="#{loginBean.login}">
+					<a4j:support event="onblur" reRender="outtextLogin"
+						oncomplete="testDate();">
+						<f:setPropertyActionListener target="#{loginAction.currentLogin}"
+							value="#{loginBean.login}" />
+					</a4j:support>
+				</h:inputText>
+				<br />
+				<h:outputText id="outtextLogin" value="#{loginBean.login}" />
+				<br />
+				<h:message for="j_username" style="color:red" id="j_usernameMsg" />
+
+				<h:outputLabel value="#{label.password}" />
+				<h:inputSecret id="j_password" value="#{loginBean.password}">
+					<a4j:support event="onblur" reRender="outtextPass" />
+				</h:inputSecret>
+				<br />
+				<h:outputText id="outtextPass" value="#{loginBean.password}" />
+				<br />
+				<h:message for="j_password" style="color:red" id="j_passwordMsg" />
+
+				<h:commandButton type="submit" id="login"
+					action="#{loginAction.login}" value="#{label.login_validation}" />
+
+			</h:panelGrid>
+			
+			<input type="button" onclick="opener=self; window.close();" value="html close" />
+			<a4j:commandButton value="a4j close" onclick="opener=self; window.close();"/>
+			<h:commandButton value="jsf close" onclick="opener=self; window.close();"/>
+			<h:commandButton type="button" value="jsf close with type" onclick="opener=self; window.close();"/>
+			
+		</h:form>
+
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,72 @@
+<html xmlns="http://www.w3.org/1999/xhtml"  
+     xmlns:h="http://java.sun.com/jsf/html"      
+      xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:p="http://primefaces.org/ui">  
+     
+ <script type="text/javascript">
+		function testJS(element) {
+			document.getElementById(element).value = 'test';
+		}
+		
+		function errorCallback(element) {
+			alert(document.getElementById(element).value);
+			document.getElementById(element).focus();
+		}
+		
+		function handleNameValidate(xhr, status, args) { 
+			if(args.validationFailed || !args.nameValid) {
+				// decommenter pour mettre le focus sur le derner champs en erreur
+				// peut faire des boucles infines en fonction des validateurs !
+				//document.getElementById('userFrom:name').focus();
+			}
+		}
+		
+		function handleIdValidate(xhr, status, args) { 
+			if(args.validationFailed || !args.idValid) {
+				// decommenter pour mettre le focus sur le derner champs en erreur
+				// peut faire des boucles infines en fonction des validateurs !
+				//document.getElementById('userFrom:id').focus();
+			}
+		}
+		
+ </script>
+ <h:head><title>Welcome to OTV_JSF_Spring_Hibernate_Project</title></h:head>  
+ <h:body>
+     <h:form id="userFrom">      
+	     <table> 
+		     <tr>
+		     	<td><h:outputLabel for="id" value="Id : " /></td>
+		     	<td><p:inputText id="id" value="#{userMB.id}" required="true">
+						<f:converter converterId="javax.faces.Integer"/>
+		     		    <p:ajax event="blur" update="idMsg,addUser" listener="#{userMB.myValidatorSucces}" immediate="false" oncomplete="handleIdValidate(xhr, status, args)" />
+		     		</p:inputText>
+		     		<p:message id="idMsg" for="id" display="text"/> 
+		     	</td>
+		     </tr>
+		     <tr>
+		     	<td><h:outputLabel for="name" value="Name : " /></td>
+		     	<td><p:inputText id="name" value="#{userMB.name}" required="true">
+		     			<!-- <f:validateLength minimum="5" />  -->
+		     			<!-- test immediate="true" -->
+		     			<p:ajax event="blur" update="nameMsg,addUser" listener="#{userMB.myValidatorSucces}" immediate="false" oncomplete="handleNameValidate(xhr, status, args)" />
+		     		</p:inputText>
+		     		<p:message id="nameMsg" for="name" display="text"/> 
+		     	</td>
+		     </tr>
+		     <tr>
+		     	<td><h:outputLabel for="surname" value="Surname : " /></td>   
+		     	<td><p:inputText id="surname" value="#{userMB.surname}" required="true"> 
+		     			<f:validateLength minimum="5" /> 
+		     			<p:ajax event="blur" update="surnameMsg" />  
+		     		</p:inputText>
+		     		<p:message id="surnameMsg" for="surname" display="icon"/> 
+		     	</td>    
+		     </tr>            
+	         <tr>
+		     	<td><p:commandButton id="addUser" value="Add" action="#{userMB.addUser}" ajax="false" icon="ui-icon-disk" disabled="#{!userMB.addOK}" /></td>
+		     	<td><p:commandButton id="reset" value="Reset" action="#{userMB.reset}" ajax="false" update="id,name,surname,idMsg,nameMsg,surnameMsg"/></td>
+		     </tr>   
+	     </table>
+     </h:form>      
+</h:body>
+</html> 

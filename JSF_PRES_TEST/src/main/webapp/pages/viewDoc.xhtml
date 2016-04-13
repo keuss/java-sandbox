@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:c="http://java.sun.com/jstl/core">
+	
+	
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title><ui:insert name="title">
+				<h:outputText value="test VIEW DOC Child" />
+			</ui:insert></title>
+		
+		<style type="text/css">
+		html,body {
+			width: 100%;
+			height: 100%;
+			margin: 0;
+			padding: 0;
+		}
+		
+		div#tooglePanel {
+			margin-right: 10px;
+			height: 100%;
+			float: right;
+			width: 7%;
+		}
+		
+		div#toogle_span {
+			margin-right: 10px;
+			height: 100%;
+			width: 10%;
+			_width: 5%;
+			float: left;
+		}
+		
+		div#documentPanel {
+			float: left;
+			height: 100%;
+			width: 60%;
+		}
+		
+		div#iframe_viewer {
+			margin-right: 10px;
+			height: 100%;
+			width: 65%;
+			_width: 50%;
+			float: none;
+		}
+		
+		.rich-combobox-shell {
+			zoom: 1;
+		}
+		
+		.headerCustom {
+			min-width: 150px;
+		}
+		</style>
+		<!--[if !IE]> -->
+		<style type="text/css">
+		#formViewer {
+			height: 100%;
+		}
+		</style>
+		<!-- <![endif]-->
+		<script type="text/javascript">
+		
+			//Get url's param, no used here
+			var pathArray = window.location.search.split('=');
+			var idDocument = pathArray[1];
+			//alert('idDocument='+idDocument);
+			
+			//The JS function calling from parent JS function doActionInChild
+			function testJSChild(idDoc) {
+				alert('testJSChild with : idDocument='+idDoc);
+			}
+			
+			//The JS function to notify parent
+			function notifyClose() {
+				if (window.opener) {
+			    	window.opener.closedChild();
+				}
+			}
+			
+			// close event
+			window.onbeforeunload = function(event) {
+			    // notify parent
+			    //if (window.opener) {
+			    	//window.opener.closedChild();
+				//}
+			    notifyCloseServer();
+			}
+			
+			//The security model in IE9 for example prevents the parent window from catching the child window onload event.
+			//So instead we need to open the communication in reverse i.e. catch the onload event in the child window and
+			//then notify the parent manually e.g. in the child window
+			window.onload = function() {
+				if (window.opener) {
+			    	window.opener.doActionInChild();
+				}
+			};
+			
+		</script>
+	</head>
+	
+	<body style="height: 100%">
+		<rich:panel id="docViewerPanel">
+				<f:facet name="header">
+					<h:outputText value="Doc Viewer Panel" />
+				</f:facet>
+				<p>Ici on aura l'applet Java ...</p>
+				<h:commandButton type="button" value="jsf close" onclick="notifyCloseServer()"/>
+			
+				<h:form id="userFormClose" prependId="false">
+				<!-- notice the <a4j:actionparam>'s will be executed first  -->
+				<a4j:jsFunction id="notifyCloseServerId" name="notifyCloseServer" data="#{modalTestAction}" oncomplete="alert(data.myParamTest);opener=self; window.close();">  
+					<a4j:actionparam name="data1" assignTo="#{modalTestAction.myParamTest}" value="CLOSED" />
+				</a4j:jsFunction>
+				</h:form>
+				<br /><br />
+			
+			
+		</rich:panel>
+	</body>
+
+</html>
+

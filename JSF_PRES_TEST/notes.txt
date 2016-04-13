@@ -1,0 +1,102 @@
+test JSF/richfaces pour projet BNPPA Cardif ...
+DynamicWeb face 2.5 (api-servlet 2.5, tomact 6 !)
+
+2014-02-14 17:29:49,015 INFO   ContextLoader                            - Root WebApplicationContext: initialization started
+2014-02-14 17:29:49,092 INFO   XmlWebApplicationContext                 - Refreshing Root WebApplicationContext: startup date [Fri Feb 14 17:29:49 CET 2014]; root of context hierarchy
+2014-02-14 17:29:49,152 INFO   XmlBeanDefinitionReader                  - Loading XML bean definitions from ServletContext resource [/WEB-INF/applicationContext.xml]
+2014-02-14 17:29:49,567 INFO   DefaultListableBeanFactory               - Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@c7b682f: defining beans []; root of factory hierarchy
+2014-02-14 17:29:49,569 INFO   ContextLoader                            - Root WebApplicationContext: initialization completed in 544 ms
+févr. 14, 2014 5:29:49 PM com.sun.faces.config.ConfigureListener contextInitialized
+INFO: Initialisation de Mojarra 2.0.9 (SNAPSHOT 20120202) pour le contexte «/JSF_PRES_TEST»
+févr. 14, 2014 5:29:52 PM com.sun.faces.config.ConfigureListener contextInitialized
+SEVERE: Critical error during deployment: 
+java.lang.LinkageError: loader constraint violation: when resolving interface method "javax.servlet.jsp.JspApplicationContext.getExpressionFactory()Ljavax/el/ExpressionFactory;" the class loader (instance of org/apache/catalina/loader/WebappClassLoader) of the current class, com/sun/faces/config/ConfigureListener, and the class loader (instance of org/apache/catalina/loader/StandardClassLoader) for resolved class, javax/servlet/jsp/JspApplicationContext, have different Class objects for the type avax/el/ExpressionFactory; used in the signature
+	at com.sun.faces.config.ConfigureListener.registerELResolverAndListenerWithJsp(ConfigureListener.java:694)
+	at com.sun.faces.config.ConfigureListener.contextInitialized(ConfigureListener.java:244)
+	at org.apache.catalina.core.StandardContext.listenerStart(StandardContext.java:4206)
+	at org.apache.catalina.core.StandardContext.start(StandardContext.java:4705)
+	at org.apache.catalina.core.ContainerBase.start(ContainerBase.java:1057)
+	at org.apache.catalina.core.StandardHost.start(StandardHost.java:840)
+	at org.apache.catalina.core.ContainerBase.start(ContainerBase.java:1057)
+	at org.apache.catalina.core.StandardEngine.start(StandardEngine.java:463)
+	at org.apache.catalina.core.StandardService.start(StandardService.java:525)
+	at org.apache.catalina.core.StandardServer.start(StandardServer.java:754)
+	at org.apache.catalina.startup.Catalina.start(Catalina.java:595)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.apache.catalina.startup.Bootstrap.start(Bootstrap.java:289)
+	at org.apache.catalina.startup.Bootstrap.main(Bootstrap.java:414)
+
+févr. 14, 2014 5:29:52 PM org.apache.catalina.core.StandardContext listenerStart
+SEVERE: Exception lors de l'envoi de l'évènement contexte initialisé (context initialized) à l'instance de classe d'écoute (listener) com.sun.faces.config.ConfigureListener
+java.lang.RuntimeException: java.lang.LinkageError: loader constraint violation: when resolving interface method "javax.servlet.jsp.JspApplicationContext.getExpressionFactory()Ljavax/el/ExpressionFactory;" the class loader (instance of org/apache/catalina/loader/WebappClassLoader) of the current class, com/sun/faces/config/ConfigureListener, and the class loader (instance of org/apache/catalina/loader/StandardClassLoader) for resolved class, javax/servlet/jsp/JspApplicationContext, have different Class objects for the type avax/el/ExpressionFactory; used in the signature
+	at com.sun.faces.config.ConfigureListener.contextInitialized(ConfigureListener.java:293)
+	at org.apache.catalina.core.StandardContext.listenerStart(StandardContext.java:4206)
+	at org.apache.catalina.core.StandardContext.start(StandardContext.java:4705)
+	at org.apache.catalina.core.ContainerBase.start(ContainerBase.java:1057)
+	at org.apache.catalina.core.StandardHost.start(StandardHost.java:840)
+	at org.apache.catalina.core.ContainerBase.start(ContainerBase.java:1057)
+	at org.apache.catalina.core.StandardEngine.start(StandardEngine.java:463)
+	at org.apache.catalina.core.StandardService.start(StandardService.java:525)
+	at org.apache.catalina.core.StandardServer.start(StandardServer.java:754)
+	at org.apache.catalina.startup.Catalina.start(Catalina.java:595)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.apache.catalina.startup.Bootstrap.start(Bootstrap.java:289)
+	at org.apache.catalina.startup.Bootstrap.main(Bootstrap.java:414)
+Caused by: java.lang.LinkageError: loader constraint violation: when resolving interface method "javax.servlet.jsp.JspApplicationContext.getExpressionFactory()Ljavax/el/ExpressionFactory;" the class loader (instance of org/apache/catalina/loader/WebappClassLoader) of the current class, com/sun/faces/config/ConfigureListener, and the class loader (instance of org/apache/catalina/loader/StandardClassLoader) for resolved class, javax/servlet/jsp/JspApplicationContext, have different Class objects for the type avax/el/ExpressionFactory; used in the signature
+	at com.sun.faces.config.ConfigureListener.registerELResolverAndListenerWithJsp(ConfigureListener.java:694)
+	at com.sun.faces.config.ConfigureListener.contextInitialized(ConfigureListener.java:244)
+	... 15 more
+	
+	
+=> au start si je mets les el en dépendance !
+	
+OK sans rien (cf. pom)
+	
+	
+http://localhost:8280/JSF_PRES_TEST/pages/datatable.xhtml
+
+20140304 :
+Nouveau test index2 (voir aussi notes test TestRichFaces)
+
+
+http://localhost:8280/JSF_PRES_TEST/pages/index2.xhtml
+
+
+test index3 : test modal :  ModalTestAction bean
+http://www.mkyong.com/jsf2/4-ways-to-pass-parameter-from-jsf-page-to-backing-bean/
+
++ test actionparam : http://docs.jboss.org/richfaces/latest_3_3_X/en/devguide/html/a4j_actionparam.html
++ test jsFunction : http://docs.jboss.org/richfaces/latest_3_3_X/en/devguide/html/a4j_jsFunction.html    /    http://stackoverflow.com/questions/1365491/how-to-correctly-access-the-data-field-in-an-a4jjsfunction-result
+
+JSF Richfaces retrieve Bean Object as Javascript Variable : http://www.christophenoel.be/blogs/web-2-0/jsf-richfaces-retrieve-bean-object-as-javascript-variable/
+
+test js communication entre deux fenêtres avec index3.xhtml / viewDoc.xhtml =>
+http://chrish.com.au/blog/cross-window-communication-using-javascript/
+http://www.objectpartners.com/2012/07/31/easy-inter-window-communications-with-jquery/
+http://stackoverflow.com/questions/944273/how-to-declare-a-global-variable-in-a-js-file
+
+
+20140404
+test rich:extendedDataTable : http://localhost:8280/JSF_PRES_TEST/pages/extendedDataTable.xhtml
+attention taille fixe !!
+
+
+20140514
+TEST PERSON PAGINATION OK avec un service de test + spring OK
+
+http://localhost:8280/JSF_PRES_TEST/pages/person/list.xhtml
+
+TODO tester avec des filtres !!!
+
+
+20140528
+TEST http://localhost:8280/JSF_PRES_TEST/pages/datatable.xhtml + rich:datascroller
+
+=> ? getAllInventoryItems appélé quand navigation ds le rich:datascroller !!! (3 fois !) => c'est du jsf :-)
+

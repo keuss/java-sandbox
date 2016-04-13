@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:batch="http://www.springframework.org/schema/batch"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch-2.1.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+
+
+
+	<context:property-placeholder location="classpath:jdbc-${spring.profiles.active}.properties"/>
+	
+	<!-- l’ItemReader : parser des fichier plats -->
+	<bean id="personneReaderCSV" class="org.springframework.batch.item.file.FlatFileItemReader">
+		<property name="resource" value="input/personnes.txt" />
+		<property name="lineMapper">
+			<bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+				<property name="lineTokenizer">
+					<bean
+						class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+						<property name="delimiter" value="," />
+						<property name="names" value="id,nom,prenom,civilite" />
+					</bean>
+				</property>
+				<property name="fieldSetMapper">
+					<bean
+						class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
+						<property name="targetType" value="com.cgi.batch.beans.Personne" />
+					</bean>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<!-- l’ItemProcessor : implémenter les règles de gestion de notre batch. -->
+	<bean id="personProcessor" class="com.cgi.batch.spring.PersonProcessor" />
+
+	<!-- l’ItemWriter persister les données qui ont été traitées via l’ItemProcessor 
+		via JdbcTemplate -->
+	<bean id="personDaoWriter" class="com.cgi.batch.spring.PersonJdbcWriter">
+		<property name="jdbcTemplate" ref="idJdbcTemplate" />
+	</bean>
+
+	<!-- le JdbcTemplate, sa dataSource et son transactionManager -->
+	<bean id="idJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="dataSource" destroy-method="close"
+		class="org.springframework.jdbc.datasource.SingleConnectionDataSource">
+		<property name="driverClassName" value="${jdbc.db.driverClassName}" />
+		<property name="url" value="${jdbc.db.url}" />
+		<property name="username" value="${jdbc.db.username}" />
+		<property name="password" value="${jdbc.db.password}" />
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- activation transaction -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+	<!-- JobLaunchers are responsible for starting a Job with a given job parameter -->
+	<bean id="jobLauncher"
+		class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+		<property name="jobRepository" ref="jobRepository" />
+	</bean>
+
+	<!-- JobRepository to store runtime information related to the batch execution 
+		: ici un MapJobRepositoryFactoryBean pour le 1er test -->
+	<bean id="jobRepository"
+		class="org.springframework.batch.core.repository.support.MapJobRepositoryFactoryBean">
+		<property name="transactionManager" ref="transactionManager" />
+	</bean>
+
+	<!-- multiple sequential writers -->
+    <bean id="myCompositeItemWriter" class="org.springframework.batch.item.support.CompositeItemWriter">
+		<property name="delegates">
+			<list>
+				<ref bean="personDaoWriter" />
+				<ref bean="cvsFileItemWriter" />
+			</list>
+		</property>
+	</bean>
+	
+	<!-- scope="step" for late binding of a property based on the job parameter -->
+	<bean id="cvsFileItemWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
+		<!-- write to this csv file -->
+		<property name="resource" value="file:/c:/devs/workspace/workspace_test_2014/SpringBatchTest/out/MyPersonne.csv" />
+		<property name="shouldDeleteIfExists" value="true" />
+		<property name="encoding" value="UTF-8"/>
+		<property name="lineAggregator">
+			<bean
+				class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
+				<property name="delimiter" value=";" />
+				<property name="fieldExtractor">
+					<bean
+						class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+						<property name="names" value="id,nom" />
+					</bean>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="itemFailureListener" class="com.cgi.batch.spring.ItemFailureListener" scope="step"/>
+    
+	<!-- le batch avec ces step, chunk ... -->
+	<!-- Le paramètre commit-interval du chunk définit le nombre d’items qui va être stocké en mémoire avant d’être persistés. -->
+	<job id="importPersonnes" xmlns="http://www.springframework.org/schema/batch">
+		<step id="readWritePersonne">
+			<!-- A tasklet is an object containing any custom logic to be executed 
+				as a part of a job -->
+			<tasklet>
+				<chunk reader="personneReaderCSV" processor="personProcessor"
+					writer="myCompositeItemWriter" commit-interval="2" skip-limit="1000" retry-limit="1">
+				<skippable-exception-classes>
+	                 <include class="java.lang.Exception"/>
+            	</skippable-exception-classes>
+            	<retryable-exception-classes>
+            		<include class="com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException"/>
+         		</retryable-exception-classes>
+			</chunk>
+			</tasklet>
+			<listeners>
+				<listener ref="itemFailureListener" />
+	    	</listeners>
+		</step>
+	</job>
+
+</beans>
+ 

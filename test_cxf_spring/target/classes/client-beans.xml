@@ -1,0 +1,51 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+ 						http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+						http://www.springframework.org/schema/tx
+						http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context-3.0.xsd
+						http://cxf.apache.org/jaxws 
+						http://cxf.apache.org/schemas/jaxws.xsd">
+
+	<jaxws:client id="helloClient"
+		serviceClass="com.cgi.test.test_cxf_spring.hello.itf.HelloService"
+		address="http://localhost:8088/test_cxf_spring/services/HelloWorld">
+		<jaxws:outInterceptors>
+			<bean class="org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor">
+				<constructor-arg>
+					<map>
+						<entry key="action" value="Timestamp UsernameToken" />
+						<entry key="passwordType" value="PasswordText" />
+						<entry key="user" value="none" />
+						<entry key="passwordCallbackRef">
+							<ref bean="myPasswordCallback" />
+						</entry>
+					</map>
+				</constructor-arg>
+			</bean>
+		</jaxws:outInterceptors>
+<!-- 		<jaxws:inFaultInterceptors> -->
+<!-- 			<ref bean="faultInterceptor" /> -->
+<!-- 		</jaxws:inFaultInterceptors> -->
+	</jaxws:client>
+
+	<bean id="myPasswordCallback"
+		class="com.cgi.test.test_cxf_spring.interceptors.WSSIDynamicCallBack" />
+
+	<bean id="faultInterceptor"
+		class="com.cgi.test.test_cxf_spring.interceptors.FaultInterceptor" />
+
+
+	<jaxws:client id="byeClient"
+		serviceClass="com.cgi.test.test_cxf_spring.bye.itf.ByeService"
+		address="http://localhost:8088/test_cxf_spring/services/ByeWorld" />
+
+	<jaxws:client id="mtomClient"
+		serviceClass="com.cgi.test.test_cxf_spring.mtom.itf.MTOMService"
+		address="http://localhost:8088/test_cxf_spring/services/MtomEndpoint" />
+
+</beans>

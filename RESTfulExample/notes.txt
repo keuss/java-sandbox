@@ -1,0 +1,57 @@
+TUTO : http://www.mkyong.com/webservices/jax-rs/jersey-hello-world-example/
+AND : http://www.vogella.com/articles/REST/article.html
+Jersey : http://jersey.java.net/
+=> Jersey is the open source, production quality, JAX-RS (JSR 311) Reference Implementation for building RESTful Web services.
+
+First test : http://localhost:8088/RESTfulExample/
+
+Test OK REST : http://localhost:8088/RESTfulExample/rest/hello/thaKeuss (via tomcat eclipse)
+
+Other TUTO : http://www.mkyong.com/tutorials/jax-rs-tutorials/
+http://www.javacodegeeks.com/2012/10/introduction-to-rest-concepts.html
+http://www.infoq.com/articles/rest-introduction
+pour aller plus loin : http://stackoverflow.com/questions/4608225/how-do-i-implement-login-in-a-restful-web-service
+
+
+Notes :
+
+JAX-RS supports the automatic creation of XML and JSON via JAXB !
+
+Pour faire du JSON, JAXB :
+<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-json</artifactId>
+			<version>${jersey.version}</version>
+</dependency>
+
+_____________________________________ Last TEST
+
+Avec com.cgi.test.rest.todo.resources
+
+Add :
+        <dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>${servlet.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+
+
+Test OK via http://localhost:8088/RESTfulExample/rest/todos/ (tomcat eclipse)
+(You should see the XML representation of your Todo items)
+
+
+
+http://localhost:8088/RESTfulExample/rest/todos/
+
++ test ok avec index.jsp pour l'add ! => Cool REST !!!!
+
+? Les méthodes de la classes TodoResource ne sont pas utilisées !
+? Différence entre TodosResource (service) et TodoResource (data classe) =>
+
+A REST web application consists therefore out of data classes (resources) and services.
+These two types are typically maintained in different packages as the Jersey servlet will
+be instructed via the web.xml to scan certain packages for data classes.
+
+RAF : le TEST JAVA a la fin de http://www.vogella.com/articles/REST/article.html

@@ -1,0 +1,55 @@
+
+commit-interval="3"
+
+19:42:22.195 [main] INFO  c.m.s.c.batch.ProductJdbcItemWriter - Call for write with [3] items : [[PR....210,BlackBerry 8100 Pearl,BlackBerry 8100 Pearl description ...,124.60, PR....211,Sony Ericsson W810i,Sony Ericsson W810i description ...,139.45, PR....212,Samsung MM-A900M Ace,Samsung MM-A900M Ace description ...,97.80]]
+19:42:22.213 [main] INFO  c.m.s.c.batch.ProductJdbcItemWriter - Call for write with [3] items : [[PR....213,Toshiba M285-E 14,Toshiba M285-E 14 description ...,166.20, PR....214,Nokia 2610 Phone,Nokia 2610 Phone description ...,145.50, PR....215,CN Clogs Beach/Garden Clog,CN Clogs Beach/Garden Clog description ...,190.70]]
+19:42:22.220 [main] INFO  c.m.s.c.batch.ProductJdbcItemWriter - Call for write with [2] items : [[PR....216,AT&T 8525 PDA,AT&T 8525 PDA description ...,289.20, PR....217,Canon Digital Rebel XT 8MP Digital SLR Camera,Canon Digital Rebel XT 8MP Digital SLR Camera description ...,13.70]]
+
+
+12 Query	SET autocommit=0
+		   12 Query	select @@session.tx_read_only
+		   12 Query	update product set name='BlackBerry 8100 Pearl', description='BlackBerry 8100 Pearl description ...', price=124.60 where id = 'PR....210'
+		   12 Query	select @@session.tx_read_only
+		   12 Query	insert into product (id,name,description,price) values('PR....210','BlackBerry 8100 Pearl','BlackBerry 8100 Pearl description ...',124.60)
+		   12 Query	select @@session.tx_read_only
+		   12 Query	update product set name='Sony Ericsson W810i', description='Sony Ericsson W810i description ...', price=139.45 where id = 'PR....211'
+		   12 Query	select @@session.tx_read_only
+		   12 Query	insert into product (id,name,description,price) values('PR....211','Sony Ericsson W810i','Sony Ericsson W810i description ...',139.45)
+		   12 Query	select @@session.tx_read_only
+		   12 Query	update product set name='Samsung MM-A900M Ace', description='Samsung MM-A900M Ace description ...', price=97.80 where id = 'PR....212'
+		   12 Query	select @@session.tx_read_only
+		   12 Query	insert into product (id,name,description,price) values('PR....212','Samsung MM-A900M Ace','Samsung MM-A900M Ace description ...',97.80)
+		   12 Query	commit
+		   
+		   12 Query	SET autocommit=1
+		   12 Query	select @@session.tx_read_only
+		   12 Query	SET autocommit=0
+		   12 Query	select @@session.tx_read_only
+		   12 Query	update product set name='Toshiba M285-E 14', description='Toshiba M285-E 14 description ...', price=166.20 where id = 'PR....213'
+		   12 Query	select @@session.tx_read_only
+		   12 Query	insert into product (id,name,description,price) values('PR....213','Toshiba M285-E 14','Toshiba M285-E 14 description ...',166.20)
+		   12 Query	select @@session.tx_read_only
+		   12 Query	update product set name='Nokia 2610 Phone', description='Nokia 2610 Phone description ...', price=145.50 where id = 'PR....214'
+		   12 Query	select @@session.tx_read_only
+		   12 Query	insert into product (id,name,description,price) values('PR....214','Nokia 2610 Phone','Nokia 2610 Phone description ...',145.50)
+		   12 Query	select @@session.tx_read_only
+		   12 Query	update product set name='CN Clogs Beach/Garden Clog', description='CN Clogs Beach/Garden Clog description ...', price=190.70 where id = 'PR....215'
+		   12 Query	select @@session.tx_read_only
+		   12 Query	insert into product (id,name,description,price) values('PR....215','CN Clogs Beach/Garden Clog','CN Clogs Beach/Garden Clog description ...',190.70)
+		   12 Query	commit
+		   
+		   12 Query	SET autocommit=1
+		   12 Query	select @@session.tx_read_only
+		   12 Query	SET autocommit=0
+		   12 Query	select @@session.tx_read_only
+		   12 Query	update product set name='AT&T 8525 PDA', description='AT&T 8525 PDA description ...', price=289.20 where id = 'PR....216'
+		   12 Query	select @@session.tx_read_only
+		   12 Query	insert into product (id,name,description,price) values('PR....216','AT&T 8525 PDA','AT&T 8525 PDA description ...',289.20)
+		   12 Query	select @@session.tx_read_only
+		   12 Query	update product set name='Canon Digital Rebel XT 8MP Digital SLR Camera', description='Canon Digital Rebel XT 8MP Digital SLR Camera description ...', price=13.70 where id = 'PR....217'
+		   12 Query	select @@session.tx_read_only
+		   12 Query	insert into product (id,name,description,price) values('PR....217','Canon Digital Rebel XT 8MP Digital SLR Camera','Canon Digital Rebel XT 8MP Digital SLR Camera description ...',13.70)
+		   12 Query	commit
+		   
+		   
+		   

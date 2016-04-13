@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+
+	<application>
+        <!-- Richfaces 3 ne marche pas avec les facelets 2.0. Il faut donc explicitement
+        déclarer un View Handler compatible avec les facelets 1.0
+        
+        Un bug à l'initialisation de RichFaces 3 empeche d'utiliser com.sun.facelets.FaceletViewHandler
+        comme View Handler avec JSF 2.0. Il faut donc declarer org.ajax4jsf.application.AjaxViewHandler
+        dans faces-config et com.sun.facelets.FaceletViewHandler dans le web.xml -->
+		<view-handler>org.ajax4jsf.application.AjaxViewHandler</view-handler>
+		
+		<!-- JSF and Spring are integrated -->
+		<el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>
+
+		<resource-bundle>
+			<base-name>messages</base-name>
+			<var>label</var>
+		</resource-bundle>
+
+		<locale-config>
+			<default-locale>fr</default-locale>
+			<supported-locale>en</supported-locale>
+   			<supported-locale>fr</supported-locale>
+		</locale-config>
+	</application>
+	
+	
+</faces-config>

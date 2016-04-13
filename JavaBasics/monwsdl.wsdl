@@ -1,0 +1,1313 @@
+
+<?xml version="1.0" encoding="UTF-8"?><wsdl:definitions name="ServicesDocumentsService" targetNamespace="http://documents.services.sae.bnppa.com/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://documents.services.sae.bnppa.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsdl:types>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://documents.services.sae.bnppa.com/" xmlns:tns="http://documents.services.sae.bnppa.com/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="addAnnotation" type="tns:addAnnotation"></xs:element>
+  <xs:element name="addAnnotationResponse" type="tns:addAnnotationResponse"></xs:element>
+  <xs:element name="addDocument" type="tns:addDocument"></xs:element>
+  <xs:element name="addDocumentResponse" type="tns:addDocumentResponse"></xs:element>
+  <xs:element name="addDocumentVersion" type="tns:addDocumentVersion"></xs:element>
+  <xs:element name="addDocumentVersionResponse" type="tns:addDocumentVersionResponse"></xs:element>
+  <xs:element name="addMedicalMemoPad" type="tns:addMedicalMemoPad"></xs:element>
+  <xs:element name="addMedicalMemoPadResponse" type="tns:addMedicalMemoPadResponse"></xs:element>
+  <xs:element name="addSimpleDocument" type="tns:addSimpleDocument"></xs:element>
+  <xs:element name="addSimpleDocumentResponse" type="tns:addSimpleDocumentResponse"></xs:element>
+  <xs:element name="changeObjectClass" type="tns:changeObjectClass"></xs:element>
+  <xs:element name="changeObjectClassResponse" type="tns:changeObjectClassResponse"></xs:element>
+  <xs:element name="createFolder" type="tns:createFolder"></xs:element>
+  <xs:element name="createFolderResponse" type="tns:createFolderResponse"></xs:element>
+  <xs:element name="createSearchTemplate" type="tns:createSearchTemplate"></xs:element>
+  <xs:element name="createSearchTemplateResponse" type="tns:createSearchTemplateResponse"></xs:element>
+  <xs:element name="deleteAnnotation" type="tns:deleteAnnotation"></xs:element>
+  <xs:element name="deleteAnnotationResponse" type="tns:deleteAnnotationResponse"></xs:element>
+  <xs:element name="deleteDocument" type="tns:deleteDocument"></xs:element>
+  <xs:element name="deleteDocumentResponse" type="tns:deleteDocumentResponse"></xs:element>
+  <xs:element name="executeSearch" type="tns:executeSearch"></xs:element>
+  <xs:element name="executeSearchResponse" type="tns:executeSearchResponse"></xs:element>
+  <xs:element name="getContent" type="tns:getContent"></xs:element>
+  <xs:element name="getContentResponse" type="tns:getContentResponse"></xs:element>
+  <xs:element name="getProperties" type="tns:getProperties"></xs:element>
+  <xs:element name="getPropertiesResponse" type="tns:getPropertiesResponse"></xs:element>
+  <xs:element name="getVersions" type="tns:getVersions"></xs:element>
+  <xs:element name="getVersionsResponse" type="tns:getVersionsResponse"></xs:element>
+  <xs:element name="loadFolderChildren" type="tns:loadFolderChildren"></xs:element>
+  <xs:element name="loadFolderChildrenResponse" type="tns:loadFolderChildrenResponse"></xs:element>
+  <xs:element name="loadForm" type="tns:loadForm"></xs:element>
+  <xs:element name="loadFormResponse" type="tns:loadFormResponse"></xs:element>
+  <xs:element name="lockObject" type="tns:lockObject"></xs:element>
+  <xs:element name="lockObjectResponse" type="tns:lockObjectResponse"></xs:element>
+  <xs:element name="move" type="tns:move"></xs:element>
+  <xs:element name="moveResponse" type="tns:moveResponse"></xs:element>
+  <xs:element name="raiseEvent" type="tns:raiseEvent"></xs:element>
+  <xs:element name="raiseEventResponse" type="tns:raiseEventResponse"></xs:element>
+  <xs:element name="reindexDocument" type="tns:reindexDocument"></xs:element>
+  <xs:element name="reindexDocumentResponse" type="tns:reindexDocumentResponse"></xs:element>
+  <xs:element name="restoreDocument" type="tns:restoreDocument"></xs:element>
+  <xs:element name="restoreDocumentResponse" type="tns:restoreDocumentResponse"></xs:element>
+  <xs:element name="retrieveFoldersTree" type="tns:retrieveFoldersTree"></xs:element>
+  <xs:element name="retrieveFoldersTreeResponse" type="tns:retrieveFoldersTreeResponse"></xs:element>
+  <xs:element name="retrievePliClientForDocId" type="tns:retrievePliClientForDocId"></xs:element>
+  <xs:element name="retrievePliClientForDocIdResponse" type="tns:retrievePliClientForDocIdResponse"></xs:element>
+  <xs:element name="saveForm" type="tns:saveForm"></xs:element>
+  <xs:element name="saveFormResponse" type="tns:saveFormResponse"></xs:element>
+  <xs:element name="searchObjects" type="tns:searchObjects"></xs:element>
+  <xs:element name="searchObjectsResponse" type="tns:searchObjectsResponse"></xs:element>
+  <xs:element name="setMultipleFoldersProprerties" type="tns:setMultipleFoldersProprerties"></xs:element>
+  <xs:element name="setMultipleFoldersProprertiesResponse" type="tns:setMultipleFoldersProprertiesResponse"></xs:element>
+  <xs:element name="setProprerties" type="tns:setProprerties"></xs:element>
+  <xs:element name="setProprertiesResponse" type="tns:setProprertiesResponse"></xs:element>
+  <xs:element name="unlockObject" type="tns:unlockObject"></xs:element>
+  <xs:element name="unlockObjectResponse" type="tns:unlockObjectResponse"></xs:element>
+  <xs:complexType name="addAnnotation">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="annotation" type="tns:documentBean"></xs:element>
+      <xs:element minOccurs="0" name="idparent" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="documentBean">
+    <xs:complexContent>
+      <xs:extension base="tns:documentaryObjectBean">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="annotation" type="tns:documentBean"></xs:element>
+          <xs:element minOccurs="0" name="content" type="xs:base64Binary"></xs:element>
+          <xs:element minOccurs="0" name="mimeType" type="xs:string"></xs:element>
+          <xs:element maxOccurs="unbounded" name="securities" nillable="true" type="tns:securityBean"></xs:element>
+          <xs:element maxOccurs="unbounded" name="versions" nillable="true" type="tns:documentBean"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="documentaryObjectBean">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="identifier" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="name" type="xs:string"></xs:element>
+      <xs:element maxOccurs="unbounded" name="properties" nillable="true" type="tns:propertyBean"></xs:element>
+      <xs:element minOccurs="0" name="type" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="securityBean">
+    <xs:sequence>
+      <xs:element name="deny" type="xs:boolean"></xs:element>
+      <xs:element name="droits" type="xs:int"></xs:element>
+      <xs:element minOccurs="0" name="groupe" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="propertyBean">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="identifier" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="type" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="value" type="xs:string"></xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="valueArrayList" nillable="true" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="addAnnotationResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:documentBean"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="move">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="objectBean" type="tns:documentaryObjectBean"></xs:element>
+      <xs:element minOccurs="0" name="parentId" type="xs:string"></xs:element>
+      <xs:element name="copy" type="xs:boolean"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="moveResponse">
+    <xs:sequence></xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="createSearchTemplate">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="selectList" type="tns:searchPropertyBean"></xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="fromList" type="tns:typeBean"></xs:element>
+      <xs:element minOccurs="0" name="criteria" type="tns:criteriaBean"></xs:element>
+      <xs:element minOccurs="0" name="title" type="xs:string"></xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="searchFolders" type="tns:folderBean"></xs:element>
+      <xs:element minOccurs="0" name="targetFolderPath" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="existingSearchId" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="searchPropertyBean">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ownerClassName" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="propertyName" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="displayName" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="type" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="objectType" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="typeBean">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="className" type="xs:string"></xs:element>
+      <xs:element name="includeSubClass" type="xs:boolean"></xs:element>
+      <xs:element minOccurs="0" name="objectType" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="displayName" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="criteriaBean">
+    <xs:sequence>
+      <xs:element name="containsOnlyHiddenField" type="xs:boolean"></xs:element>
+      <xs:element name="empty" type="xs:boolean"></xs:element>
+      <xs:element maxOccurs="unbounded" name="groupCriteriaBean" nillable="true" type="tns:criteriaBean"></xs:element>
+      <xs:element maxOccurs="unbounded" name="listCriteronBean" nillable="true" type="tns:criterionBean"></xs:element>
+      <xs:element maxOccurs="unbounded" name="listJoin" nillable="true" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="criterionBean">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="classConcerned" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="criteria" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="dataType" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="displayName" type="xs:string"></xs:element>
+      <xs:element name="hidden" type="xs:boolean"></xs:element>
+      <xs:element minOccurs="0" name="id" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="join" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="operator" type="xs:string"></xs:element>
+      <xs:element name="required" type="xs:boolean"></xs:element>
+      <xs:element minOccurs="0" name="value" type="xs:string"></xs:element>
+      <xs:element name="valueNullable" type="xs:boolean"></xs:element>
+      <xs:element name="readonly" type="xs:boolean"></xs:element>
+      <xs:element name="common" type="xs:boolean"></xs:element>
+      <xs:element minOccurs="0" name="choiceListId" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="folderBean">
+    <xs:complexContent>
+      <xs:extension base="tns:documentaryObjectBean">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" name="children" nillable="true" type="tns:documentaryObjectBean"></xs:element>
+          <xs:element maxOccurs="unbounded" name="securities" nillable="true" type="tns:securityBean"></xs:element>
+          <xs:element name="includeSubFolders" nillable="true" type="xs:boolean"></xs:element>
+          <xs:element minOccurs="0" name="view" nillable="true" type="xs:string"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="createSearchTemplateResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="raiseEvent">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="eventClassName" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="objectId" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="objectClassName" type="xs:string"></xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="properties" type="tns:propertyBean"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="raiseEventResponse">
+    <xs:sequence></xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="createFolder">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="folder" type="tns:folderBean"></xs:element>
+      <xs:element minOccurs="0" name="parentId" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="createFolderResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="saveForm">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="formId" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="oldSearchId" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="criteria" type="tns:criteriaBean"></xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="valuesList" type="tns:searchItemBean"></xs:element>
+      <xs:element minOccurs="0" name="newFormName" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="searchItemBean">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="identifier" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="value" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="saveFormResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:formBean"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="formBean">
+    <xs:complexContent>
+      <xs:extension base="tns:documentaryObjectBean">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" name="columns" nillable="true" type="tns:searchPropertyBean"></xs:element>
+          <xs:element minOccurs="0" name="criteria" type="tns:criteriaBean"></xs:element>
+          <xs:element maxOccurs="unbounded" name="securities" nillable="true" type="tns:securityBean"></xs:element>
+          <xs:element maxOccurs="unbounded" name="types" nillable="true" type="tns:typeBean"></xs:element>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="searchFolders" nillable="true" type="tns:folderBean"></xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="addDocumentVersion">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="document" type="tns:documentBean"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="addDocumentVersionResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:documentBean"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="restoreDocument">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="documentId" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="restoreDocumentResponse">
+    <xs:sequence></xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getContent">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="objectId" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getContentResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:base64Binary"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="unlockObject">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="objectId" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="unlockObjectResponse">
+    <xs:sequence></xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getProperties">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="classNameStr" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="objectId" type="xs:string"></xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="filter" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getPropertiesResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:propertyBean"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getVersions">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="objectId" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getVersionsResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:documentBean"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deleteAnnotation">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="annotId" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deleteAnnotationResponse">
+    <xs:sequence></xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="loadForm">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="formId" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="loadFormResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:formBean"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deleteDocument">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="documentId" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deleteDocumentResponse">
+    <xs:sequence></xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="executeSearch">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="searchExecution" type="tns:searchExecutionBean"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="searchExecutionBean">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="searchIdentifier" type="xs:string"></xs:element>
+      <xs:element maxOccurs="unbounded" name="valuesList" nillable="true" type="tns:searchItemBean"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="executeSearchResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:searchResultBean"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="searchResultBean">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" name="resultList" nillable="true" type="tns:documentaryObjectBean"></xs:element>
+      <xs:element minOccurs="0" name="tree" type="tns:folderBean"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="addDocument">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="document" type="tns:documentBean"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="addDocumentResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:documentBean"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="addMedicalMemoPad">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="document" type="tns:documentBean"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="addMedicalMemoPadResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:documentBean"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="retrievePliClientForDocId">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:string"></xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="filter" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="retrievePliClientForDocIdResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:propertyBean"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="reindexDocument">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="document" type="tns:documentaryObjectBean"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="reindexDocumentResponse">
+    <xs:sequence></xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="lockObject">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="objectId" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="owner" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="lockObjectResponse">
+    <xs:sequence></xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="changeObjectClass">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="className" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="newClassName" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="objectId" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="changeObjectClassResponse">
+    <xs:sequence></xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="loadFolderChildren">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="folderId" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="loadFolderChildrenResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:documentaryObjectBean"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="retrieveFoldersTree">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="folderIdentifier" type="xs:string"></xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="propToDisplay" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="retrieveFoldersTreeResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:documentaryObjectBean"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setProprerties">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="classNameStr" type="xs:string"></xs:element>
+      <xs:element minOccurs="0" name="objectId" type="xs:string"></xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="properties" type="tns:propertyBean"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setProprertiesResponse">
+    <xs:sequence></xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setMultipleFoldersProprerties">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="ldocBean" type="tns:documentaryObjectBean"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="setMultipleFoldersProprertiesResponse">
+    <xs:sequence></xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="searchObjects">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="criteria" type="tns:criteriaBean"></xs:element>
+      <xs:element name="types" type="xs:int"></xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="columns" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="searchObjectsResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:documentaryObjectBean"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="addSimpleDocument">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="document" type="tns:documentBean"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="addSimpleDocumentResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:documentBean"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="TechnicalException" type="tns:TechnicalException"></xs:element>
+  <xs:complexType name="TechnicalException">
+    <xs:sequence>
+      <xs:element name="codeErreur" nillable="true" type="xs:int"></xs:element>
+      <xs:element name="messageErreur" nillable="true" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="FunctionnalException" type="tns:FunctionnalException"></xs:element>
+  <xs:complexType name="FunctionnalException">
+    <xs:sequence>
+      <xs:element name="codeErreur" nillable="true" type="xs:int"></xs:element>
+      <xs:element name="messageErreur" nillable="true" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ServicesDocumentsException" type="tns:ServicesDocumentsException"></xs:element>
+  <xs:complexType name="ServicesDocumentsException">
+    <xs:sequence>
+      <xs:element name="codeErreur" nillable="true" type="xs:int"></xs:element>
+      <xs:element name="messageErreur" nillable="true" type="xs:string"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>  </wsdl:types>
+  <wsdl:message name="retrievePliClientForDocId">
+    <wsdl:part element="tns:retrievePliClientForDocId" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="unlockObjectResponse">
+    <wsdl:part element="tns:unlockObjectResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="raiseEvent">
+    <wsdl:part element="tns:raiseEvent" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getPropertiesResponse">
+    <wsdl:part element="tns:getPropertiesResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createFolder">
+    <wsdl:part element="tns:createFolder" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addMedicalMemoPadResponse">
+    <wsdl:part element="tns:addMedicalMemoPadResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="changeObjectClassResponse">
+    <wsdl:part element="tns:changeObjectClassResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="retrieveFoldersTreeResponse">
+    <wsdl:part element="tns:retrieveFoldersTreeResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ServicesDocumentsException">
+    <wsdl:part element="tns:ServicesDocumentsException" name="ServicesDocumentsException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="TechnicalException">
+    <wsdl:part element="tns:TechnicalException" name="TechnicalException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="loadFolderChildren">
+    <wsdl:part element="tns:loadFolderChildren" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addAnnotationResponse">
+    <wsdl:part element="tns:addAnnotationResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getVersions">
+    <wsdl:part element="tns:getVersions" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteAnnotationResponse">
+    <wsdl:part element="tns:deleteAnnotationResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="reindexDocumentResponse">
+    <wsdl:part element="tns:reindexDocumentResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="retrieveFoldersTree">
+    <wsdl:part element="tns:retrieveFoldersTree" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getContentResponse">
+    <wsdl:part element="tns:getContentResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="unlockObject">
+    <wsdl:part element="tns:unlockObject" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="FunctionnalException">
+    <wsdl:part element="tns:FunctionnalException" name="FunctionnalException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="searchObjectsResponse">
+    <wsdl:part element="tns:searchObjectsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="restoreDocumentResponse">
+    <wsdl:part element="tns:restoreDocumentResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="loadFormResponse">
+    <wsdl:part element="tns:loadFormResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="lockObjectResponse">
+    <wsdl:part element="tns:lockObjectResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getProperties">
+    <wsdl:part element="tns:getProperties" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addMedicalMemoPad">
+    <wsdl:part element="tns:addMedicalMemoPad" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="changeObjectClass">
+    <wsdl:part element="tns:changeObjectClass" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="moveResponse">
+    <wsdl:part element="tns:moveResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addAnnotation">
+    <wsdl:part element="tns:addAnnotation" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createSearchTemplateResponse">
+    <wsdl:part element="tns:createSearchTemplateResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addDocumentVersionResponse">
+    <wsdl:part element="tns:addDocumentVersionResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addDocumentResponse">
+    <wsdl:part element="tns:addDocumentResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteAnnotation">
+    <wsdl:part element="tns:deleteAnnotation" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="reindexDocument">
+    <wsdl:part element="tns:reindexDocument" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteDocumentResponse">
+    <wsdl:part element="tns:deleteDocumentResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="saveFormResponse">
+    <wsdl:part element="tns:saveFormResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getContent">
+    <wsdl:part element="tns:getContent" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addSimpleDocumentResponse">
+    <wsdl:part element="tns:addSimpleDocumentResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="searchObjects">
+    <wsdl:part element="tns:searchObjects" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="setMultipleFoldersProprertiesResponse">
+    <wsdl:part element="tns:setMultipleFoldersProprertiesResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="loadForm">
+    <wsdl:part element="tns:loadForm" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="lockObject">
+    <wsdl:part element="tns:lockObject" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="restoreDocument">
+    <wsdl:part element="tns:restoreDocument" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="move">
+    <wsdl:part element="tns:move" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="setProprertiesResponse">
+    <wsdl:part element="tns:setProprertiesResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createSearchTemplate">
+    <wsdl:part element="tns:createSearchTemplate" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="executeSearchResponse">
+    <wsdl:part element="tns:executeSearchResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addDocumentVersion">
+    <wsdl:part element="tns:addDocumentVersion" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addDocument">
+    <wsdl:part element="tns:addDocument" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteDocument">
+    <wsdl:part element="tns:deleteDocument" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="retrievePliClientForDocIdResponse">
+    <wsdl:part element="tns:retrievePliClientForDocIdResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="saveForm">
+    <wsdl:part element="tns:saveForm" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addSimpleDocument">
+    <wsdl:part element="tns:addSimpleDocument" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="raiseEventResponse">
+    <wsdl:part element="tns:raiseEventResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="setMultipleFoldersProprerties">
+    <wsdl:part element="tns:setMultipleFoldersProprerties" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="createFolderResponse">
+    <wsdl:part element="tns:createFolderResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="loadFolderChildrenResponse">
+    <wsdl:part element="tns:loadFolderChildrenResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getVersionsResponse">
+    <wsdl:part element="tns:getVersionsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="setProprerties">
+    <wsdl:part element="tns:setProprerties" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="executeSearch">
+    <wsdl:part element="tns:executeSearch" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="ServicesDocuments">
+    <wsdl:operation name="addAnnotation">
+      <wsdl:input message="tns:addAnnotation" name="addAnnotation">
+    </wsdl:input>
+      <wsdl:output message="tns:addAnnotationResponse" name="addAnnotationResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:TechnicalException" name="TechnicalException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="move">
+      <wsdl:input message="tns:move" name="move">
+    </wsdl:input>
+      <wsdl:output message="tns:moveResponse" name="moveResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:TechnicalException" name="TechnicalException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="createSearchTemplate">
+      <wsdl:input message="tns:createSearchTemplate" name="createSearchTemplate">
+    </wsdl:input>
+      <wsdl:output message="tns:createSearchTemplateResponse" name="createSearchTemplateResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:TechnicalException" name="TechnicalException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="raiseEvent">
+      <wsdl:input message="tns:raiseEvent" name="raiseEvent">
+    </wsdl:input>
+      <wsdl:output message="tns:raiseEventResponse" name="raiseEventResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:TechnicalException" name="TechnicalException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="createFolder">
+      <wsdl:input message="tns:createFolder" name="createFolder">
+    </wsdl:input>
+      <wsdl:output message="tns:createFolderResponse" name="createFolderResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:TechnicalException" name="TechnicalException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="saveForm">
+      <wsdl:input message="tns:saveForm" name="saveForm">
+    </wsdl:input>
+      <wsdl:output message="tns:saveFormResponse" name="saveFormResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:TechnicalException" name="TechnicalException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:FunctionnalException" name="FunctionnalException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="addDocumentVersion">
+      <wsdl:input message="tns:addDocumentVersion" name="addDocumentVersion">
+    </wsdl:input>
+      <wsdl:output message="tns:addDocumentVersionResponse" name="addDocumentVersionResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:TechnicalException" name="TechnicalException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="restoreDocument">
+      <wsdl:input message="tns:restoreDocument" name="restoreDocument">
+    </wsdl:input>
+      <wsdl:output message="tns:restoreDocumentResponse" name="restoreDocumentResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getContent">
+      <wsdl:input message="tns:getContent" name="getContent">
+    </wsdl:input>
+      <wsdl:output message="tns:getContentResponse" name="getContentResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:TechnicalException" name="TechnicalException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:FunctionnalException" name="FunctionnalException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="unlockObject">
+      <wsdl:input message="tns:unlockObject" name="unlockObject">
+    </wsdl:input>
+      <wsdl:output message="tns:unlockObjectResponse" name="unlockObjectResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:TechnicalException" name="TechnicalException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getProperties">
+      <wsdl:input message="tns:getProperties" name="getProperties">
+    </wsdl:input>
+      <wsdl:output message="tns:getPropertiesResponse" name="getPropertiesResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:TechnicalException" name="TechnicalException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:FunctionnalException" name="FunctionnalException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getVersions">
+      <wsdl:input message="tns:getVersions" name="getVersions">
+    </wsdl:input>
+      <wsdl:output message="tns:getVersionsResponse" name="getVersionsResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:TechnicalException" name="TechnicalException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="deleteAnnotation">
+      <wsdl:input message="tns:deleteAnnotation" name="deleteAnnotation">
+    </wsdl:input>
+      <wsdl:output message="tns:deleteAnnotationResponse" name="deleteAnnotationResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:TechnicalException" name="TechnicalException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="loadForm">
+      <wsdl:input message="tns:loadForm" name="loadForm">
+    </wsdl:input>
+      <wsdl:output message="tns:loadFormResponse" name="loadFormResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:TechnicalException" name="TechnicalException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="deleteDocument">
+      <wsdl:input message="tns:deleteDocument" name="deleteDocument">
+    </wsdl:input>
+      <wsdl:output message="tns:deleteDocumentResponse" name="deleteDocumentResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:TechnicalException" name="TechnicalException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="executeSearch">
+      <wsdl:input message="tns:executeSearch" name="executeSearch">
+    </wsdl:input>
+      <wsdl:output message="tns:executeSearchResponse" name="executeSearchResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:TechnicalException" name="TechnicalException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="addDocument">
+      <wsdl:input message="tns:addDocument" name="addDocument">
+    </wsdl:input>
+      <wsdl:output message="tns:addDocumentResponse" name="addDocumentResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:TechnicalException" name="TechnicalException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="addMedicalMemoPad">
+      <wsdl:input message="tns:addMedicalMemoPad" name="addMedicalMemoPad">
+    </wsdl:input>
+      <wsdl:output message="tns:addMedicalMemoPadResponse" name="addMedicalMemoPadResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:TechnicalException" name="TechnicalException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="retrievePliClientForDocId">
+      <wsdl:input message="tns:retrievePliClientForDocId" name="retrievePliClientForDocId">
+    </wsdl:input>
+      <wsdl:output message="tns:retrievePliClientForDocIdResponse" name="retrievePliClientForDocIdResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:TechnicalException" name="TechnicalException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:ServicesDocumentsException" name="ServicesDocumentsException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="reindexDocument">
+      <wsdl:input message="tns:reindexDocument" name="reindexDocument">
+    </wsdl:input>
+      <wsdl:output message="tns:reindexDocumentResponse" name="reindexDocumentResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="lockObject">
+      <wsdl:input message="tns:lockObject" name="lockObject">
+    </wsdl:input>
+      <wsdl:output message="tns:lockObjectResponse" name="lockObjectResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:TechnicalException" name="TechnicalException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="changeObjectClass">
+      <wsdl:input message="tns:changeObjectClass" name="changeObjectClass">
+    </wsdl:input>
+      <wsdl:output message="tns:changeObjectClassResponse" name="changeObjectClassResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:TechnicalException" name="TechnicalException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="loadFolderChildren">
+      <wsdl:input message="tns:loadFolderChildren" name="loadFolderChildren">
+    </wsdl:input>
+      <wsdl:output message="tns:loadFolderChildrenResponse" name="loadFolderChildrenResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:TechnicalException" name="TechnicalException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="retrieveFoldersTree">
+      <wsdl:input message="tns:retrieveFoldersTree" name="retrieveFoldersTree">
+    </wsdl:input>
+      <wsdl:output message="tns:retrieveFoldersTreeResponse" name="retrieveFoldersTreeResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:TechnicalException" name="TechnicalException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="setProprerties">
+      <wsdl:input message="tns:setProprerties" name="setProprerties">
+    </wsdl:input>
+      <wsdl:output message="tns:setProprertiesResponse" name="setProprertiesResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:TechnicalException" name="TechnicalException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="setMultipleFoldersProprerties">
+      <wsdl:input message="tns:setMultipleFoldersProprerties" name="setMultipleFoldersProprerties">
+    </wsdl:input>
+      <wsdl:output message="tns:setMultipleFoldersProprertiesResponse" name="setMultipleFoldersProprertiesResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:TechnicalException" name="TechnicalException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="searchObjects">
+      <wsdl:input message="tns:searchObjects" name="searchObjects">
+    </wsdl:input>
+      <wsdl:output message="tns:searchObjectsResponse" name="searchObjectsResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:TechnicalException" name="TechnicalException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:FunctionnalException" name="FunctionnalException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="addSimpleDocument">
+      <wsdl:input message="tns:addSimpleDocument" name="addSimpleDocument">
+    </wsdl:input>
+      <wsdl:output message="tns:addSimpleDocumentResponse" name="addSimpleDocumentResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:TechnicalException" name="TechnicalException">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ServicesDocumentsServiceSoapBinding" type="tns:ServicesDocuments">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"></soap:binding>
+    <wsdl:operation name="addAnnotation">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="addAnnotation">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="addAnnotationResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+      <wsdl:fault name="TechnicalException">
+        <soap:fault name="TechnicalException" use="literal"></soap:fault>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="move">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="move">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="moveResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+      <wsdl:fault name="TechnicalException">
+        <soap:fault name="TechnicalException" use="literal"></soap:fault>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="createSearchTemplate">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="createSearchTemplate">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="createSearchTemplateResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+      <wsdl:fault name="TechnicalException">
+        <soap:fault name="TechnicalException" use="literal"></soap:fault>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="raiseEvent">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="raiseEvent">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="raiseEventResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+      <wsdl:fault name="TechnicalException">
+        <soap:fault name="TechnicalException" use="literal"></soap:fault>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="createFolder">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="createFolder">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="createFolderResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+      <wsdl:fault name="TechnicalException">
+        <soap:fault name="TechnicalException" use="literal"></soap:fault>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="addDocumentVersion">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="addDocumentVersion">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="addDocumentVersionResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+      <wsdl:fault name="TechnicalException">
+        <soap:fault name="TechnicalException" use="literal"></soap:fault>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="saveForm">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="saveForm">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="saveFormResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+      <wsdl:fault name="TechnicalException">
+        <soap:fault name="TechnicalException" use="literal"></soap:fault>
+      </wsdl:fault>
+      <wsdl:fault name="FunctionnalException">
+        <soap:fault name="FunctionnalException" use="literal"></soap:fault>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getContent">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="getContent">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="getContentResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+      <wsdl:fault name="TechnicalException">
+        <soap:fault name="TechnicalException" use="literal"></soap:fault>
+      </wsdl:fault>
+      <wsdl:fault name="FunctionnalException">
+        <soap:fault name="FunctionnalException" use="literal"></soap:fault>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="restoreDocument">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="restoreDocument">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="restoreDocumentResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="unlockObject">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="unlockObject">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="unlockObjectResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+      <wsdl:fault name="TechnicalException">
+        <soap:fault name="TechnicalException" use="literal"></soap:fault>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getProperties">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="getProperties">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="getPropertiesResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+      <wsdl:fault name="TechnicalException">
+        <soap:fault name="TechnicalException" use="literal"></soap:fault>
+      </wsdl:fault>
+      <wsdl:fault name="FunctionnalException">
+        <soap:fault name="FunctionnalException" use="literal"></soap:fault>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getVersions">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="getVersions">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="getVersionsResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+      <wsdl:fault name="TechnicalException">
+        <soap:fault name="TechnicalException" use="literal"></soap:fault>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="deleteAnnotation">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="deleteAnnotation">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="deleteAnnotationResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+      <wsdl:fault name="TechnicalException">
+        <soap:fault name="TechnicalException" use="literal"></soap:fault>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="loadForm">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="loadForm">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="loadFormResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+      <wsdl:fault name="TechnicalException">
+        <soap:fault name="TechnicalException" use="literal"></soap:fault>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="deleteDocument">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="deleteDocument">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="deleteDocumentResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+      <wsdl:fault name="TechnicalException">
+        <soap:fault name="TechnicalException" use="literal"></soap:fault>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="executeSearch">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="executeSearch">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="executeSearchResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+      <wsdl:fault name="TechnicalException">
+        <soap:fault name="TechnicalException" use="literal"></soap:fault>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="addDocument">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="addDocument">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="addDocumentResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+      <wsdl:fault name="TechnicalException">
+        <soap:fault name="TechnicalException" use="literal"></soap:fault>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="addMedicalMemoPad">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="addMedicalMemoPad">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="addMedicalMemoPadResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+      <wsdl:fault name="TechnicalException">
+        <soap:fault name="TechnicalException" use="literal"></soap:fault>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="reindexDocument">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="reindexDocument">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="reindexDocumentResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="retrievePliClientForDocId">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="retrievePliClientForDocId">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="retrievePliClientForDocIdResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+      <wsdl:fault name="TechnicalException">
+        <soap:fault name="TechnicalException" use="literal"></soap:fault>
+      </wsdl:fault>
+      <wsdl:fault name="ServicesDocumentsException">
+        <soap:fault name="ServicesDocumentsException" use="literal"></soap:fault>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="changeObjectClass">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="changeObjectClass">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="changeObjectClassResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+      <wsdl:fault name="TechnicalException">
+        <soap:fault name="TechnicalException" use="literal"></soap:fault>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="lockObject">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="lockObject">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="lockObjectResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+      <wsdl:fault name="TechnicalException">
+        <soap:fault name="TechnicalException" use="literal"></soap:fault>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="loadFolderChildren">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="loadFolderChildren">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="loadFolderChildrenResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+      <wsdl:fault name="TechnicalException">
+        <soap:fault name="TechnicalException" use="literal"></soap:fault>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="retrieveFoldersTree">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="retrieveFoldersTree">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="retrieveFoldersTreeResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+      <wsdl:fault name="TechnicalException">
+        <soap:fault name="TechnicalException" use="literal"></soap:fault>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="setProprerties">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="setProprerties">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="setProprertiesResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+      <wsdl:fault name="TechnicalException">
+        <soap:fault name="TechnicalException" use="literal"></soap:fault>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="setMultipleFoldersProprerties">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="setMultipleFoldersProprerties">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="setMultipleFoldersProprertiesResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+      <wsdl:fault name="TechnicalException">
+        <soap:fault name="TechnicalException" use="literal"></soap:fault>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="searchObjects">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="searchObjects">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="searchObjectsResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+      <wsdl:fault name="TechnicalException">
+        <soap:fault name="TechnicalException" use="literal"></soap:fault>
+      </wsdl:fault>
+      <wsdl:fault name="FunctionnalException">
+        <soap:fault name="FunctionnalException" use="literal"></soap:fault>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="addSimpleDocument">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="addSimpleDocument">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="addSimpleDocumentResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+      <wsdl:fault name="TechnicalException">
+        <soap:fault name="TechnicalException" use="literal"></soap:fault>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ServicesDocumentsService">
+    <wsdl:port binding="tns:ServicesDocumentsServiceSoapBinding" name="ServicesDocumentsPort">
+      <soap:address location="http://fr-wst-vm-0818.groupinfra.com:9080/BPC_TGV_CDM_INT_WAR/mule/ged/servicesdocuments"></soap:address>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,73 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:a4j="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/layout.xhtml"
+>
+	<ui:define name="title">Person's List</ui:define>
+	<ui:define name="logout"><ui:include src="/layout/logout.xhtml"/></ui:define>
+	<ui:define name="content">
+    	<h:form>
+			
+        	<rich:dataTable 
+        		id="personListBean" 
+        		columnClasses="col"
+            	value="#{personListBean.data}"
+            	var="row"
+            	rows="#{personListBean.data.rowsByPage}" 
+            >
+            	<f:facet name="header">
+	                <rich:columnGroup>
+	                    <h:column>
+	                        <h:outputText styleClass="headerText" value="#{label.id}" />
+	                    </h:column>
+	                    <h:column>
+	                        <h:outputText styleClass="headerText" value="#{label.firstname}" />
+	                    </h:column>
+	                    <h:column>
+	                        <h:outputText styleClass="headerText" value="#{label.lastname}" />
+	                    </h:column>
+	                    <h:column>
+	                        <h:outputText styleClass="headerText" value="#{label.address}" />
+	                    </h:column>
+	                    <h:column>
+	                        <h:outputText styleClass="headerText" value="#{label.town}" />
+	                    </h:column>
+	                    <h:column>
+	                        <h:outputText styleClass="headerText" value="#{label.country}" />
+	                    </h:column>
+	                </rich:columnGroup>
+	            </f:facet>
+	            <h:column>
+	            	<h:outputText value="#{row.id}" />
+	            </h:column>
+	            <h:column>
+	                <h:outputText value="#{row.firstName}" />
+	            </h:column>
+	            <h:column>
+	                <h:outputText value="#{row.lastName}" />
+	            </h:column>
+	            <h:column>
+	                <h:outputText value="#{row.address}" />
+	            </h:column>
+	            <h:column>
+	                <h:outputText value="#{row.town}" />
+	            </h:column>
+	            <h:column>
+	                <h:outputText value="#{row.country}" />
+	            </h:column>
+	        </rich:dataTable>
+	        
+    	    <rich:datascroller 
+    	    	id="dataScroller"
+    	    	align="left" 
+    	    	for="personListBean" 
+    	    	maxPages="4"
+            	page="#{personListBean.data.currentPage}"
+            	reRender="personListBean"
+			/>
+    	</h:form>
+    </ui:define>
+</ui:composition>

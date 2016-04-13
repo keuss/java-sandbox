@@ -1,0 +1,96 @@
+<html>
+	<head>
+		<title>Window Opener Chatter</title>
+		<style>
+		input[type=text] {
+			width: 20em;
+		}
+		
+		#haveParent,#haveChild,#chatArea {
+			display: none;
+		}
+		
+		#chatArea {
+			border: thin solid grey;
+			height: 15em;
+			overflow: auto;
+			width: 20em;
+		}
+		
+		.childSays {
+			color: green;
+		}
+		
+		.parentSays {
+			color: blue;
+		}
+		</style>
+		<script type="text/javascript"
+			src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+		<script type="text/javascript">
+		var child = null;
+		$(function() {
+		
+		  $("#openAnother").click(function(e) {
+		    e.preventDefault();
+		    child = window.open(location.href);
+		    $("#openAnotherDiv").hide();
+		    $("#haveChild,#chatArea").show();
+		
+		    $("#childChatter").submit(function(e) {
+		      e.preventDefault();
+		      var newP = "<span class='parentSays'>"
+		               + $("#childMessage").val()
+		               + "</span><br/>";
+		      $("#chatArea",child.document).append( newP );
+		      $("#chatArea").append( newP );
+		      $("#childMessage").val("").focus();
+		    });
+		  });
+		
+		  if( window.opener ) {
+		    $("#haveParent,#chatArea").show();
+		
+		    $("#parentChatter").submit(function(e) {
+		      e.preventDefault();
+		      var newP = "<span class='childSays'>"
+		               + $("#parentMessage").val()
+		               + "</span><br/>";
+		      $("#chatArea",window.opener.document).append( newP );
+		      $("#chatArea").append( newP );
+		      $("#parentMessage").val("").focus();
+		    });
+		  } 
+		});
+		</script>
+	</head>
+	<body>
+	
+		<div id="openAnotherDiv">
+			<a href="#openAnother" id="openAnother">Open Another Window</a>
+		</div>
+	
+		<div id="haveChild">
+			<span>I have a child!</span>
+			<div>
+				<form id="childChatter">
+					<input type="text" id="childMessage"> <input type="submit"
+						value="Say">
+				</form>
+			</div>
+		</div>
+	
+		<div id="haveParent">
+			<span>I have a parent!</span>
+			<div>
+				<form id="parentChatter">
+					<input type="text" id="parentMessage"> <input type="submit"
+						value="Say">
+				</form>
+			</div>
+		</div>
+	
+		<div id="chatArea"></div>
+	
+	</body>
+</html>

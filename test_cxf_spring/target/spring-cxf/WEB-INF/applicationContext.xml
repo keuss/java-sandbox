@@ -1,0 +1,66 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jaxws="http://cxf.apache.org/jaxws" xmlns:cxf="http://cxf.apache.org/core"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+ 						http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+						http://www.springframework.org/schema/tx
+						http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context-3.0.xsd
+						http://cxf.apache.org/jaxws 
+						http://cxf.apache.org/schemas/jaxws.xsd
+						http://cxf.apache.org/core
+						http://cxf.apache.org/schemas/core.xsd">
+
+	<!-- Chargement modules cxf via le jar cxf.jar -->
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+
+	<!-- definition du Endpoint JAX-WS -->
+	<jaxws:endpoint id="helloWorld"
+		implementor="com.cgi.test.test_cxf_spring.hello.impl.HelloServiceImpl"
+		address="/HelloWorld">
+
+		<jaxws:inInterceptors>
+			<bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+				<constructor-arg>
+					<map>
+						<entry key="action" value="UsernameToken Timestamp" />
+						<entry key="passwordCallbackRef">
+							<ref bean="wsAuthenticationInterceptor" />
+						</entry>
+					</map>
+				</constructor-arg>
+			</bean>
+		</jaxws:inInterceptors>
+		<jaxws:outFaultInterceptors>
+			<ref bean="exceptionInterceptor" />
+		</jaxws:outFaultInterceptors>
+	</jaxws:endpoint>
+
+	<bean id="exceptionInterceptor"
+		class="com.cgi.test.test_cxf_spring.interceptors.ExceptionInterceptor" />
+
+	<bean id="wsAuthenticationInterceptor"
+		class="com.cgi.test.test_cxf_spring.interceptors.SomeInterceptor" />
+
+	<bean id="logOutbound" class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
+
+	<!-- definition du Endpoint JAX-WS -->
+	<jaxws:endpoint id="byeWorld"
+		implementor="com.cgi.test.test_cxf_spring.bye.impl.ByeServiceImpl"
+		address="/ByeWorld" />
+
+
+	<!-- definition du Endpoint JAX-WS -->
+	<jaxws:endpoint id="mtomEndpoint"
+		implementor="com.cgi.test.test_cxf_spring.mtom.impl.MTOMServiceImpl"
+		address="/MtomEndpoint">
+		<jaxws:properties>
+			<entry key="mtom-enabled" value="true" />
+		</jaxws:properties>
+	</jaxws:endpoint>
+
+</beans>

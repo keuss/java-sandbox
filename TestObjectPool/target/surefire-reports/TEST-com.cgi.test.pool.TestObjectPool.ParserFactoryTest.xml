@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite failures="0" time="0.101" errors="0" skipped="0" tests="1" name="com.cgi.test.pool.TestObjectPool.ParserFactoryTest">
+  <properties>
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
+    <property name="sun.boot.library.path" value="C:\apps\jdk-1.6\jre\bin"/>
+    <property name="java.vm.version" value="20.45-b01"/>
+    <property name="java.vm.vendor" value="Sun Microsystems Inc."/>
+    <property name="java.vendor.url" value="http://java.sun.com/"/>
+    <property name="path.separator" value=";"/>
+    <property name="guice.disable.misplaced.annotation.check" value="true"/>
+    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
+    <property name="file.encoding.pkg" value="sun.io"/>
+    <property name="user.country" value="FR"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.os.patch.level" value="Service Pack 1"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="user.dir" value="C:\devs\workspace\workspace_test_2014\TestObjectPool"/>
+    <property name="java.runtime.version" value="1.6.0_45-b06"/>
+    <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment"/>
+    <property name="java.endorsed.dirs" value="C:\apps\jdk-1.6\jre\lib\endorsed"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.io.tmpdir" value="C:\Users\galloisg\AppData\Local\Temp\"/>
+    <property name="line.separator" value="
+"/>
+    <property name="java.vm.specification.vendor" value="Sun Microsystems Inc."/>
+    <property name="user.variant" value=""/>
+    <property name="os.name" value="Windows 7"/>
+    <property name="classworlds.conf" value="C:\devs\workspace\workspace_test_2014\.metadata\.plugins\org.eclipse.m2e.core\launches\m2conf169758755633473063.tmp"/>
+    <property name="sun.jnu.encoding" value="Cp1252"/>
+    <property name="java.library.path" value="C:\apps\jdk-1.6\bin;C:\windows\Sun\Java\bin;C:\windows\system32;C:\windows;C:/apps/ORACLEJDK6/bin/../jre/bin/client;C:/apps/ORACLEJDK6/bin/../jre/bin;C:/apps/ORACLEJDK6/bin/../jre/lib/i386;C:\windows\system32;C:\windows;C:\windows\System32\Wbem;C:\windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\Symantec\Symantec Endpoint Encryption Clients\;C:\Program Files (x86)\IBM\FileNet\ContentEngine\bin;C:\Program Files\TortoiseSVN\bin;C:\Program Files\SourceGear\Common\DiffMerge\;C:\apps\Eclipse\eclipse4.2;;."/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.class.version" value="50.0"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="os.version" value="6.1"/>
+    <property name="user.home" value="C:\Users\galloisg"/>
+    <property name="user.timezone" value="Europe/Paris"/>
+    <property name="java.awt.printerjob" value="sun.awt.windows.WPrinterJob"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.specification.version" value="1.6"/>
+    <property name="user.name" value="galloisg"/>
+    <property name="java.class.path" value="/C:/apps/Eclipse/eclipse4.2/configuration/org.eclipse.osgi/bundles/810/1/.cp/jars/plexus-classworlds-2.4.jar"/>
+    <property name="java.vm.specification.version" value="1.0"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.home" value="C:\apps\jdk-1.6\jre"/>
+    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher -B -s C:\Users\galloisg\.m2\settings-default.xml clean install"/>
+    <property name="java.specification.vendor" value="Sun Microsystems Inc."/>
+    <property name="user.language" value="fr"/>
+    <property name="awt.toolkit" value="sun.awt.windows.WToolkit"/>
+    <property name="java.vm.info" value="mixed mode"/>
+    <property name="java.version" value="1.6.0_45"/>
+    <property name="java.ext.dirs" value="C:\apps\jdk-1.6\jre\lib\ext;C:\windows\Sun\Java\lib\ext"/>
+    <property name="sun.boot.class.path" value="C:\apps\jdk-1.6\jre\lib\resources.jar;C:\apps\jdk-1.6\jre\lib\rt.jar;C:\apps\jdk-1.6\jre\lib\sunrsasign.jar;C:\apps\jdk-1.6\jre\lib\jsse.jar;C:\apps\jdk-1.6\jre\lib\jce.jar;C:\apps\jdk-1.6\jre\lib\charsets.jar;C:\apps\jdk-1.6\jre\lib\modules\jdk.boot.jar;C:\apps\jdk-1.6\jre\classes"/>
+    <property name="java.vendor" value="Sun Microsystems Inc."/>
+    <property name="maven.home" value="C:\devs\workspace\workspace_test_2014\TestObjectPool\EMBEDDED"/>
+    <property name="file.separator" value="\"/>
+    <property name="java.vendor.url.bug" value="http://java.sun.com/cgi-bin/bugreport.cgi"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="sun.desktop" value="windows"/>
+    <property name="sun.cpu.isalist" value="amd64"/>
+  </properties>
+  <testcase time="0.061" classname="com.cgi.test.pool.TestObjectPool.ParserFactoryTest" name="test"/>
+</testsuite>

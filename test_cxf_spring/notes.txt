@@ -1,0 +1,68 @@
+TUTO :
+http://www.objis.com/formation-java/tutoriel-web-services-integration-cxf-spring-maven.html
+http://cxf.apache.org/docs/writing-a-service-with-spring.html
+
+test OK via http://localhost:8088/test_cxf_spring/services/HelloWorld?wsdl avec tomcat eclipse
+
+test OK via http://localhost:8088/spring-cxf/services/HelloWorld?wsdl avec tomcat 7
+
+test OK via http://localhost:8088/test_cxf_spring/services/ByeWorld?wsdl avec tomcat eclipse
+
+Test exception OK
+
+20130919
+Test MTOM : http://localhost:8088/test_cxf_spring/services/MtomEndpoint?wsdl
+OK
+Liens : CXF & MTOM
+http://cxf.apache.org/docs/mtom.html
+http://skhanzada.wordpress.com/2010/09/13/large-attachements-with-mtom-and-cxf/
+http://cxf.apache.org/docs/mtom-attachments-with-jaxb.html
+
+
+20130927 :
+création d'un wrapper de datasource : ByteArrayDataSource
+test OK avec file.bmp
+
+
+20131119 :
+Test logger cxf sans code : fichier cxf.xml trouvé tt seul côté client =>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:http="http://cxf.apache.org/transports/http/configuration"
+	xmlns:sec="http://cxf.apache.org/configuration/security" xmlns:cxf="http://cxf.apache.org/core"
+	xsi:schemaLocation="
+       	http://www.springframework.org/schema/beans				http://www.springframework.org/schema/beans/spring-beans.xsd
+ 		http://cxf.apache.org/core                              http://cxf.apache.org/schemas/core.xsd
+		http://cxf.apache.org/transports/http/configuration		http://cxf.apache.org/schemas/configuration/http-conf.xsd
+ 		http://cxf.apache.org/configuration/security			http://cxf.apache.org/schemas/configuration/security.xsd
+	">
+
+	<bean id="logInbound" class="org.apache.cxf.interceptor.LoggingInInterceptor" />
+	<bean id="logOutbound" class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
+
+	<cxf:bus>
+		<cxf:features>
+			<cxf:logging />
+		</cxf:features>
+		<cxf:inInterceptors>
+			<ref bean="logInbound" />
+		</cxf:inInterceptors>
+		<cxf:outInterceptors>
+			<ref bean="logOutbound" />
+		</cxf:outInterceptors>
+		<cxf:outFaultInterceptors>
+			<ref bean="logOutbound" />
+		</cxf:outFaultInterceptors>
+		<cxf:inFaultInterceptors>
+			<ref bean="logInbound" />
+		</cxf:inFaultInterceptors>
+	</cxf:bus>
+</beans>
+
+=> LOG ok
+
+D'autre doc (endpoint cxf avec bean spring classique) : 
+http://cxf.apache.org/docs/writing-a-service-with-spring.html
+=>
+<bean id="hello" class="demo.spring.service.HelloWorldImpl" />
+ 
+<jaxws:endpoint id="helloWorld" implementor="#hello" address="/HelloWorld" />

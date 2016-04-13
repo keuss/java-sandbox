@@ -1,0 +1,523 @@
+20141113 TEST Chunk
+TUTO : Chunk Oriented Processing in Spring Batch
+http://java.dzone.com/articles/chunk-oriented-processing
+
+TUTO sur git : voir le zip "OTV_SpringBatch_Chunk_Oriented_Processing-master"
+
+
+1/ Création BDD
+
+CREATE DATABASE ONLINETECHVISION;
+
+CREATE TABLE ONLINETECHVISION.USER (
+   id int(11) NOT NULL AUTO_INCREMENT,
+   name varchar(45) NOT NULL,
+   surname varchar(45) NOT NULL,
+   PRIMARY KEY (`id`)
+);
+
+2/ MAJ logger pour utiliser SLF
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+private static final Logger logger = LoggerFactory.getLogger(XXXX.class);
+
+3/ Test Main OK 
+
+SELECT * FROM onlinetechvision.user;
+TRUNCATE `onlinetechvision`.`user`;
+
+
+4/ Test perso OK avec un job simple :
+
+<!-- TEST GGA 20141113 -->
+     <batch:job id="firstJob"> 
+		<batch:step id="firstStep">
+			<batch:tasklet>
+				<batch:chunk reader="firstTestReader" processor="testProcessor" writer="testWriter" commit-interval="5"/>
+			</batch:tasklet>
+		</batch:step>
+	</batch:job>
+	
++ max Items de 10
+
+=> il read/process/insert bien par paquet de 5
+
+Faire des tests avec le read en BDD (batch de maj.) et tester des cas d'erreurs ...
+
+5/ Test avec reader BBD ok (TestReaderBDD)
+
+Test avec TestWriterBDD : OK =>
+
+5 lignes, commit par 2
+
+JAVA doc : http://docs.jboss.org/hibernate/orm/4.1/javadocs/
+
+13.11.2014 18:20:49  INFO (Application.java:30) - Strating Application ...
+13.11.2014 18:20:49  INFO (AbstractApplicationContext.java:500) - Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@4a5d484a: startup date [Thu Nov 13 18:20:49 CET 2014]; root of context hierarchy
+13.11.2014 18:20:49  INFO (XmlBeanDefinitionReader.java:315) - Loading XML bean definitions from class path resource [applicationContext.xml]
+13.11.2014 18:20:49  INFO (XmlBeanDefinitionReader.java:315) - Loading XML bean definitions from class path resource [jobContext.xml]
+13.11.2014 18:20:49  INFO (XmlBeanDefinitionReader.java:315) - Loading XML bean definitions from class path resource [dataContext.xml]
+13.11.2014 18:20:50  INFO (DefaultListableBeanFactory.java:647) - Overriding bean definition for bean 'firstJob': replacing [Generic bean: class [org.springframework.batch.core.configuration.xml.SimpleFlowFactoryBean]; scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null] with [Generic bean: class [org.springframework.batch.core.configuration.xml.JobParserJobFactoryBean]; scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null]
+13.11.2014 18:20:50  INFO (DefaultListableBeanFactory.java:647) - Overriding bean definition for bean 'secondJob': replacing [Generic bean: class [org.springframework.batch.core.configuration.xml.SimpleFlowFactoryBean]; scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null] with [Generic bean: class [org.springframework.batch.core.configuration.xml.JobParserJobFactoryBean]; scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null]
+13.11.2014 18:20:50  INFO (DefaultListableBeanFactory.java:647) - Overriding bean definition for bean 'thirdJob': replacing [Generic bean: class [org.springframework.batch.core.configuration.xml.SimpleFlowFactoryBean]; scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null] with [Generic bean: class [org.springframework.batch.core.configuration.xml.JobParserJobFactoryBean]; scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null]
+13.11.2014 18:20:50  INFO (PropertiesLoaderSupport.java:177) - Loading properties file from class path resource [jdbc.properties]
+13.11.2014 18:20:50  INFO (DefaultListableBeanFactory.java:581) - Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@496833a4: defining beans [org.springframework.beans.factory.config.PropertyPlaceholderConfigurer#0,org.springframework.aop.config.internalAutoProxyCreator,org.springframework.transaction.annotation.AnnotationTransactionAttributeSource#0,org.springframework.transaction.interceptor.TransactionInterceptor#0,org.springframework.transaction.config.internalTransactionAdvisor,dataSource,sessionFactory,transactionManager,jobRepository,jobLauncher,testReaderBDD,firstTestReader,secondTestReader,thirdTestReader,fourthTestReader,fifthTestReader,failedCaseTestReader,testProcessor,testWriterCSV,testWriterBDD,testWriter,failedStepTasklet,org.springframework.batch.core.scope.internalStepScope,org.springframework.beans.factory.config.CustomEditorConfigurer,org.springframework.batch.core.configuration.xml.CoreNamespacePostProcessor,firstStep,firstJob,thirdStep,fourthStep,firstFailedStep,secondJob,fifthStep,sixthStep,secondFailedStep,thirdJob,userDAO,userService,batchProcessStarter]; root of factory hierarchy
+13.11.2014 18:20:50  INFO (Version.java:37) - HCANN000001: Hibernate Commons Annotations {4.0.1.Final}
+13.11.2014 18:20:50  INFO (Version.java:41) - HHH000412: Hibernate Core {4.1.8.Final}
+13.11.2014 18:20:50  INFO (Environment.java:239) - HHH000206: hibernate.properties not found
+13.11.2014 18:20:50  INFO (Environment.java:342) - HHH000021: Bytecode provider name : javassist
+13.11.2014 18:20:50  INFO (Dialect.java:123) - HHH000400: Using dialect: org.hibernate.dialect.MySQLDialect
+13.11.2014 18:20:51  INFO (TransactionFactoryInitiator.java:68) - HHH000399: Using default transaction strategy (direct JDBC transactions)
+13.11.2014 18:20:51  INFO (ASTQueryTranslatorFactory.java:48) - HHH000397: Using ASTQueryTranslatorFactory
+13.11.2014 18:20:51  INFO (HibernateTransactionManager.java:268) - Using DataSource [org.apache.tomcat.jdbc.pool.DataSource@639adf08{ConnectionPool[defaultAutoCommit=null; defaultReadOnly=null; defaultTransactionIsolation=-1; defaultCatalog=null; driverClassName=com.mysql.jdbc.Driver; maxActive=10; maxIdle=10; minIdle=3; initialSize=10; maxWait=30000; testOnBorrow=true; testOnReturn=true; timeBetweenEvictionRunsMillis=30000; numTestsPerEvictionRun=0; minEvictableIdleTimeMillis=60000; testWhileIdle=true; testOnConnect=false; password=admin; url=jdbc:mysql://localhost:3306/onlinetechvision; username=root; validationQuery=SELECT 1 FROM DUAL; validatorClassName=null; validationInterval=30000; accessToUnderlyingConnectionAllowed=true; removeAbandoned=false; removeAbandonedTimeout=60; logAbandoned=false; connectionProperties=null; initSQL=SELECT 1 FROM DUAL; jdbcInterceptors=null; jmxEnabled=true; fairQueue=true; useEquals=true; abandonWhenPercentageFull=0; maxAge=0; useLock=false; dataSource=null; dataSourceJNDI=null; suspectTimeout=0; alternateUsernameAllowed=false; }] of Hibernate SessionFactory for HibernateTransactionManager
+13.11.2014 18:20:51  INFO (SimpleJobLauncher.java:179) - No TaskExecutor has been set, defaulting to synchronous executor.
+13.11.2014 18:20:51  INFO (BatchProcessStarter.java:39) - Strating BatchProcessStarter ...
+13.11.2014 18:20:51  INFO (SimpleJobLauncher.java:118) - Job: [FlowJob: [name=firstJob]] launched with the following parameters: [{}]
+13.11.2014 18:20:51  INFO (SimpleStepHandler.java:133) - Executing step: [firstStep]
+13.11.2014 18:20:51  INFO (TestReaderBDD.java:41) - nbCalled : [0]
+13.11.2014 18:20:51  INFO (UserService.java:68) - Call for getToMigrateUser ...
+Hibernate: select user0_.ID as ID0_, user0_.NAME as NAME0_, user0_.SURNAME as SURNAME0_ from USER user0_ order by user0_.ID asc limit ?
+13.11.2014 18:20:51  INFO (UserDAO.java:81) - getToMigrateUser size [1]
+13.11.2014 18:20:51  INFO (TestReaderBDD.java:50) - Read user [id : 1, name : firstname_0, surname : firstsurname_0]
+13.11.2014 18:20:51  INFO (TestReaderBDD.java:41) - nbCalled : [1]
+13.11.2014 18:20:51  INFO (UserService.java:68) - Call for getToMigrateUser ...
+Hibernate: select user0_.ID as ID0_, user0_.NAME as NAME0_, user0_.SURNAME as SURNAME0_ from USER user0_ order by user0_.ID asc limit ?, ?
+13.11.2014 18:20:51  INFO (UserDAO.java:81) - getToMigrateUser size [1]
+13.11.2014 18:20:51  INFO (TestReaderBDD.java:50) - Read user [id : 2, name : firstname_1, surname : firstsurname_1]
+13.11.2014 18:20:51  INFO (TestProcessor.java:35) - Process user [id : 1, name : FIRSTNAME_0, surname : FIRSTSURNAME_0]
+13.11.2014 18:20:51  INFO (TestProcessor.java:35) - Process user [id : 2, name : FIRSTNAME_1, surname : FIRSTSURNAME_1]
+13.11.2014 18:20:51  INFO (UserService.java:63) - Call for updatedUser with user id [1]
+13.11.2014 18:20:51  INFO (UserService.java:63) - Call for updatedUser with user id [2]
+Hibernate: update USER set NAME=?, SURNAME=? where ID=?
+Hibernate: update USER set NAME=?, SURNAME=? where ID=?
+13.11.2014 18:20:51  INFO (TestReaderBDD.java:41) - nbCalled : [2]
+13.11.2014 18:20:51  INFO (UserService.java:68) - Call for getToMigrateUser ...
+Hibernate: select user0_.ID as ID0_, user0_.NAME as NAME0_, user0_.SURNAME as SURNAME0_ from USER user0_ order by user0_.ID asc limit ?, ?
+13.11.2014 18:20:51  INFO (UserDAO.java:81) - getToMigrateUser size [1]
+13.11.2014 18:20:51  INFO (TestReaderBDD.java:50) - Read user [id : 3, name : firstname_2, surname : firstsurname_2]
+13.11.2014 18:20:51  INFO (TestReaderBDD.java:41) - nbCalled : [3]
+13.11.2014 18:20:51  INFO (UserService.java:68) - Call for getToMigrateUser ...
+Hibernate: select user0_.ID as ID0_, user0_.NAME as NAME0_, user0_.SURNAME as SURNAME0_ from USER user0_ order by user0_.ID asc limit ?, ?
+13.11.2014 18:20:51  INFO (UserDAO.java:81) - getToMigrateUser size [1]
+13.11.2014 18:20:51  INFO (TestReaderBDD.java:50) - Read user [id : 4, name : firstname_3, surname : firstsurname_3]
+13.11.2014 18:20:51  INFO (TestProcessor.java:35) - Process user [id : 3, name : FIRSTNAME_2, surname : FIRSTSURNAME_2]
+13.11.2014 18:20:51  INFO (TestProcessor.java:35) - Process user [id : 4, name : FIRSTNAME_3, surname : FIRSTSURNAME_3]
+13.11.2014 18:20:51  INFO (UserService.java:63) - Call for updatedUser with user id [3]
+13.11.2014 18:20:51  INFO (UserService.java:63) - Call for updatedUser with user id [4]
+Hibernate: update USER set NAME=?, SURNAME=? where ID=?
+Hibernate: update USER set NAME=?, SURNAME=? where ID=?
+13.11.2014 18:20:51  INFO (TestReaderBDD.java:41) - nbCalled : [4]
+13.11.2014 18:20:51  INFO (UserService.java:68) - Call for getToMigrateUser ...
+Hibernate: select user0_.ID as ID0_, user0_.NAME as NAME0_, user0_.SURNAME as SURNAME0_ from USER user0_ order by user0_.ID asc limit ?, ?
+13.11.2014 18:20:51  INFO (UserDAO.java:81) - getToMigrateUser size [1]
+13.11.2014 18:20:51  INFO (TestReaderBDD.java:50) - Read user [id : 5, name : firstname_4, surname : firstsurname_4]
+13.11.2014 18:20:51  INFO (TestReaderBDD.java:41) - nbCalled : [5]
+13.11.2014 18:20:51  INFO (UserService.java:68) - Call for getToMigrateUser ...
+Hibernate: select user0_.ID as ID0_, user0_.NAME as NAME0_, user0_.SURNAME as SURNAME0_ from USER user0_ order by user0_.ID asc limit ?, ?
+13.11.2014 18:20:51  INFO (UserDAO.java:81) - getToMigrateUser size [0]
+13.11.2014 18:20:51  INFO (TestProcessor.java:35) - Process user [id : 5, name : FIRSTNAME_4, surname : FIRSTSURNAME_4]
+13.11.2014 18:20:51  INFO (UserService.java:63) - Call for updatedUser with user id [5]
+Hibernate: update USER set NAME=?, SURNAME=? where ID=?
+13.11.2014 18:20:51  INFO (SimpleJobLauncher.java:121) - Job: [FlowJob: [name=firstJob]] completed with the following parameters: [{}] and the following status: [COMPLETED]
+13.11.2014 18:20:52  INFO (BatchProcessStarter.java:48) - JobExecution: id=0, version=2, startTime=Thu Nov 13 18:20:51 CET 2014, endTime=Thu Nov 13 18:20:51 CET 2014, lastUpdated=Thu Nov 13 18:20:51 CET 2014, status=COMPLETED, exitStatus=exitCode=COMPLETED;exitDescription=, job=[JobInstance: id=0, version=0, JobParameters=[{}], Job=[firstJob]]
+
+Le MySQL Workbench 6.2 CE ne se lance plus : passer en ligne de commande (voir cpacture PNG) 
+
+Si erreur connexion : lancer mysql dans les service Window
+C:\Program Files\MySQL\MySQL Server 5.6\bin>mysql.exe --user=root --password=admin
+Warning: Using a password on the command line interface can be insecure.
+ERROR 2003 (HY000): Can't connect to MySQL server on 'localhost' (10061)
+
+
+
+Pour changer de base :
+mysql> connect onlinetechvision;
+Connection id:    2
+Current database: onlinetechvision
+
+
+Exemple complet :
+
+C:\Program Files\MySQL\MySQL Server 5.6\bin>mysql -u root -p
+Enter password: *****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 3
+Server version: 5.6.21-log MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2014, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> connect onlinetechvision;
+Connection id:    4
+Current database: onlinetechvision
+
+mysql> select * from USER;
++----+-------------+----------------+
+| id | name        | surname        |
++----+-------------+----------------+
+|  1 | firstname_0 | firstsurname_0 |
+|  2 | firstname_1 | firstsurname_1 |
+|  3 | firstname_2 | firstsurname_2 |
+|  4 | firstname_3 | firstsurname_3 |
+|  5 | firstname_4 | firstsurname_4 |
++----+-------------+----------------+
+5 rows in set (0.05 sec)
+
+Ou via pour se connecter (besoin du deamon lancé avant) : 
+"C:\Program Files\MySQL\MySQL Server 5.6\bin\mysql.exe" "--defaults-file=C:\ProgramData\MySQL\MySQL Server 5.6\my.ini" "-uroot" "-p"
+Pour lancer de deamon (service) :
+"C:\Program Files\MySQL\MySQL Server 5.6\bin\mysqld.exe" --defaults-file="C:\ProgramData\MySQL\MySQL Server 5.6\my.ini" MySQL56
+
+Ajout des logs dans C:\ProgramData\MySQL\MySQL Server 5.6\my.ini
+general-log=1
+general_log_file="C:/apps/MySQL/logs/mysql.log"
+
+20150119
+
+Test ApplicationTest.java
+
+Accès DAO directement KO :
+Exception in thread "main" org.hibernate.HibernateException: No Session found for current thread
+=> getCurrentSession() only makes sense inside a scope of transaction.
+
+http://stackoverflow.com/questions/10459922/org-hibernate-hibernateexception-no-session-found-for-current-thread
+
+Même Chose avec un TU prope : UserDAOTest
+add  @Transactional(readOnly = true) sur la méthode du DAO à tester => OK
+
+
+20150120
+test externalisation dans hbm files => OK
+
+http://forum.spring.io/forum/other-spring-related/architecture/75213-externalize-queries-hibernate-spring
+http://stackoverflow.com/questions/602397/how-do-i-externalize-named-queries-in-a-hibernate-annotations-app
+http://www.javalobby.org/java/forums/m91885316.html
+http://www.javalobby.org/articles/hibernatequery102/?source=archives
+http://www.tutorialspoint.com/hibernate/hibernate_query_language.htm
+
+mysql> insert into USER (name, surname) values ("firstname_1","daMotherfuck");
+Query OK, 1 row affected (0.04 sec)
+
+mysql> commit;
+Query OK, 0 rows affected (0.00 sec)
+
+
+Test avec 7 lignes / commit 2 et trace mysql
+150120 16:31:47	   22 Query	SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ
+		   22 Query	SELECT @@session.tx_isolation
+		   22 Query	SET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE
+		   22 Query	SET autocommit=0
+		   22 Query	commit
+		   22 Query	SET autocommit=1
+		   22 Query	SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ
+		   22 Query	SET autocommit=0
+		   22 Query	commit
+		   22 Query	SET autocommit=1
+		   22 Query	SET autocommit=0
+		   22 Query	commit
+		   22 Query	SET autocommit=1
+		   22 Query	SET autocommit=0
+		   22 Query	commit
+		   22 Query	SET autocommit=1
+		   22 Query	SET autocommit=0
+		   22 Query	commit
+		   22 Query	SET autocommit=1
+		   22 Query	SET autocommit=0
+		   22 Query	commit
+		   22 Query	SET autocommit=1
+		   22 Query	SET autocommit=0
+		   22 Query	commit
+		   22 Query	SET autocommit=1
+		   22 Query	SET autocommit=0
+		   22 Query	select user0_.ID as ID0_, user0_.NAME as NAME0_, user0_.SURNAME as SURNAME0_ from USER user0_ order by user0_.ID asc limit 1
+		   22 Query	select user0_.ID as ID0_, user0_.NAME as NAME0_, user0_.SURNAME as SURNAME0_ from USER user0_ order by user0_.ID asc limit 1, 1
+		   22 Query	update USER set NAME='firstname_0', SURNAME='firstsurname_0' where ID=1
+		   22 Query	update USER set NAME='firstname_1', SURNAME='firstsurname_1' where ID=2
+		   22 Query	commit
+		   22 Query	SET autocommit=1
+		   22 Query	SET autocommit=0
+		   22 Query	select user0_.ID as ID0_, user0_.NAME as NAME0_, user0_.SURNAME as SURNAME0_ from USER user0_ order by user0_.ID asc limit 2, 1
+		   22 Query	select user0_.ID as ID0_, user0_.NAME as NAME0_, user0_.SURNAME as SURNAME0_ from USER user0_ order by user0_.ID asc limit 3, 1
+		   22 Query	update USER set NAME='firstname_2', SURNAME='firstsurname_2' where ID=3
+		   22 Query	update USER set NAME='firstname_3', SURNAME='firstsurname_3' where ID=4
+		   22 Query	commit
+		   22 Query	SET autocommit=1
+		   22 Query	SET autocommit=0
+		   22 Query	select user0_.ID as ID0_, user0_.NAME as NAME0_, user0_.SURNAME as SURNAME0_ from USER user0_ order by user0_.ID asc limit 4, 1
+		   22 Query	select user0_.ID as ID0_, user0_.NAME as NAME0_, user0_.SURNAME as SURNAME0_ from USER user0_ order by user0_.ID asc limit 5, 1
+		   22 Query	update USER set NAME='firstname_4', SURNAME='firstsurname_4' where ID=5
+		   22 Query	update USER set NAME='firstname_1', SURNAME='dafuck' where ID=6
+		   22 Query	commit
+		   22 Query	SET autocommit=1
+		   22 Query	SET autocommit=0
+		   22 Query	select user0_.ID as ID0_, user0_.NAME as NAME0_, user0_.SURNAME as SURNAME0_ from USER user0_ order by user0_.ID asc limit 6, 1
+		   22 Query	select user0_.ID as ID0_, user0_.NAME as NAME0_, user0_.SURNAME as SURNAME0_ from USER user0_ order by user0_.ID asc limit 7, 1
+		   22 Query	update USER set NAME='firstname_1', SURNAME='damotherfuck' where ID=7
+		   22 Query	commit
+		   22 Query	SET autocommit=1
+		   22 Query	SET autocommit=0
+		   22 Query	commit
+		   22 Query	SET autocommit=1
+		   22 Query	SET autocommit=0
+		   22 Query	commit
+		   22 Query	SET autocommit=1
+		   22 Query	SET autocommit=0
+		   22 Query	commit
+		   22 Query	SET autocommit=1
+		   22 Query	SET autocommit=0
+		   22 Query	commit
+		   22 Query	SET autocommit=1
+		   22 Query	SELECT @@session.tx_isolation
+		   22 Query	SET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE
+		   22 Query	SET autocommit=0
+		   22 Query	commit
+		   22 Query	SET autocommit=1
+		   22 Query	SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ
+
+=> un commit tt les deux update => COOL !!
+
+Test avec 7 lignes / commit 7 et trace mysql
+150120 16:44:39	   47 Query	select user0_.ID as ID0_, user0_.NAME as NAME0_, user0_.SURNAME as SURNAME0_ from USER user0_ order by user0_.ID asc limit 1
+		   47 Query	select user0_.ID as ID0_, user0_.NAME as NAME0_, user0_.SURNAME as SURNAME0_ from USER user0_ order by user0_.ID asc limit 1, 1
+		   47 Query	select user0_.ID as ID0_, user0_.NAME as NAME0_, user0_.SURNAME as SURNAME0_ from USER user0_ order by user0_.ID asc limit 2, 1
+		   47 Query	select user0_.ID as ID0_, user0_.NAME as NAME0_, user0_.SURNAME as SURNAME0_ from USER user0_ order by user0_.ID asc limit 3, 1
+		   47 Query	select user0_.ID as ID0_, user0_.NAME as NAME0_, user0_.SURNAME as SURNAME0_ from USER user0_ order by user0_.ID asc limit 4, 1
+		   47 Query	select user0_.ID as ID0_, user0_.NAME as NAME0_, user0_.SURNAME as SURNAME0_ from USER user0_ order by user0_.ID asc limit 5, 1
+		   47 Query	select user0_.ID as ID0_, user0_.NAME as NAME0_, user0_.SURNAME as SURNAME0_ from USER user0_ order by user0_.ID asc limit 6, 1
+		   47 Query	update USER set NAME='FIRSTNAME_0', SURNAME='FIRSTSURNAME_0' where ID=1
+		   47 Query	update USER set NAME='FIRSTNAME_1', SURNAME='FIRSTSURNAME_1' where ID=2
+		   47 Query	update USER set NAME='FIRSTNAME_2', SURNAME='FIRSTSURNAME_2' where ID=3
+		   47 Query	update USER set NAME='FIRSTNAME_3', SURNAME='FIRSTSURNAME_3' where ID=4
+		   47 Query	update USER set NAME='FIRSTNAME_4', SURNAME='FIRSTSURNAME_4' where ID=5
+		   47 Query	update USER set NAME='FIRSTNAME_1', SURNAME='DAFUCK' where ID=6
+		   47 Query	update USER set NAME='FIRSTNAME_1', SURNAME='DAMOTHERFUCK' where ID=7
+		   47 Query	commit
+		   47 Query	SET autocommit=1
+		   47 Query	SET autocommit=0
+		   47 Query	select user0_.ID as ID0_, user0_.NAME as NAME0_, user0_.SURNAME as SURNAME0_ from USER user0_ order by user0_.ID asc limit 7, 1
+		   47 Query	commit
+		   47 Query	SET autocommit=1
+		   47 Query	SET autocommit=0
+		   47 Query	commit
+		   47 Query	SET autocommit=1
+		   47 Query	SET autocommit=0
+		   47 Query	commit
+		   47 Query	SET autocommit=1
+		   47 Query	SET autocommit=0
+		   47 Query	commit
+		   47 Query	SET autocommit=1
+		   47 Query	SET autocommit=0
+		   47 Query	commit
+		   47 Query	SET autocommit=1
+		   47 Query	SELECT @@session.tx_isolation
+		   47 Query	SET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE
+		   47 Query	SET autocommit=0
+		   47 Query	commit
+		   47 Query	SET autocommit=1
+		   47 Query	SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ
+
+=> Un seul commit après les 7 select/update => COOL !!
+
+
+20140123 TEST JdbcPagingItemReader
+http://forum.spring.io/forum/spring-projects/batch/102108-jdbcpagingitemreader-setpagesize-vs-setfetchsize-what-s-the-difference
+
+
+TEST avec http://www.mkyong.com/spring-batch/spring-batch-example-mysql-database-to-xml/
+
+=> OK mais
+erreur OPTION SQL_SELECT_LIMIT=DEFAULT / c'est SET SQL_SELECT_LIMIT=DEFAULT qui est bon => je maj le driver : mysql-connector-java-gpl-5.1.34.msi
+it seems like MySQL have deprecated this syntax OPTION SQL_SELECT_LIMIT=DEFAULT
+I checked the source of mysql-connector-java 5.1.22 and the problem seems to be fixed:
+
+SET SQL_SELECT_LIMIT=DEFAULT
+
+j'ai pris la version 5.1.34 => même chose ...
+
+update maven dependency OK : <mysql-connector>5.1.34</mysql-connector>
+
+=> commit = 1 / pageSize = 4 => lecture SQL de 4 lignes puis 1 process / 1 write X 4 à la suite, ...
+<property name="fetchSize" value="2" /> => ne change rien (enlevé)
+
+SQL log :
+SELECT id, name, surname FROM user WHERE name='firstname_1' ORDER BY id ASC LIMIT 4
+SELECT id, name, surname FROM user WHERE name='firstname_1' AND id > 8 ORDER BY id ASC LIMIT 4
+SELECT id, name, surname FROM user WHERE name='firstname_1' AND id > 12 ORDER BY id ASC LIMIT 4
+SELECT id, name, surname FROM user WHERE name='firstname_1' AND id > 16 ORDER BY id ASC LIMIT 4
+
+
+
+20150211 TEST JdbcPagingItemReader (avec pageSize) + commit > 1
+
+:
+
+<batch:job id="firstJob"> 
+				<batch:step id="firstStep">
+					<batch:tasklet>
+						<batch:chunk reader="pagingItemReader" processor="testProcessor" writer="testWriterCSV" commit-interval="4"/>
+					</batch:tasklet>
+				</batch:step>
+</batch:job>
+
+
+TEST OK
+Lecture par pagination 4 en mémoire :
+read unitaire et process unitaire x 4 (commit-interval="4") et appel du write avec 4 élément
+
+SQL :
+Query	SET autocommit=0
+		   42 Query	SET SQL_SELECT_LIMIT=4
+		   42 Query	SELECT id, name, surname FROM user WHERE name='firstname_1' ORDER BY id ASC LIMIT 4
+		   42 Query	commit
+		   42 Query	SET autocommit=1
+		   42 Query	SET SQL_SELECT_LIMIT=DEFAULT
+		   42 Query	select @@session.tx_read_only
+		   42 Query	SET autocommit=0
+		   42 Query	SET SQL_SELECT_LIMIT=4
+		   42 Query	SELECT id, name, surname FROM user WHERE name='firstname_1' AND id > 8 ORDER BY id ASC LIMIT 4
+		   42 Query	commit
+		   42 Query	SET autocommit=1
+		   42 Query	SET SQL_SELECT_LIMIT=DEFAULT
+		   42 Query	select @@session.tx_read_only
+		   42 Query	SET autocommit=0
+		   42 Query	SET SQL_SELECT_LIMIT=4
+		   42 Query	SELECT id, name, surname FROM user WHERE name='firstname_1' AND id > 12 ORDER BY id ASC LIMIT 4
+		   42 Query	commit
+		   42 Query	SET autocommit=1
+		   42 Query	SET SQL_SELECT_LIMIT=DEFAULT
+		   42 Query	select @@session.tx_read_only
+		   42 Query	SET autocommit=0
+		   42 Query	SET SQL_SELECT_LIMIT=4
+		   42 Query	SELECT id, name, surname FROM user WHERE name='firstname_1' AND id > 16 ORDER BY id ASC LIMIT 4
+		   42 Query	commit
+		   42 Query	SET autocommit=1
+		   
+LOG :	   
+11.02.2015 16:45:33  INFO (Application.java:29) - Strating Application ...
+11.02.2015 16:45:33  INFO (AbstractApplicationContext.java:500) - Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@3bd5f0e6: startup date [Wed Feb 11 16:45:33 CET 2015]; root of context hierarchy
+11.02.2015 16:45:33  INFO (XmlBeanDefinitionReader.java:315) - Loading XML bean definitions from class path resource [applicationContext.xml]
+11.02.2015 16:45:33  INFO (XmlBeanDefinitionReader.java:315) - Loading XML bean definitions from class path resource [jobContext.xml]
+11.02.2015 16:45:33  INFO (XmlBeanDefinitionReader.java:315) - Loading XML bean definitions from class path resource [dataContext.xml]
+11.02.2015 16:45:33  INFO (DefaultListableBeanFactory.java:647) - Overriding bean definition for bean 'firstJob': replacing [Generic bean: class [org.springframework.batch.core.configuration.xml.SimpleFlowFactoryBean]; scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null] with [Generic bean: class [org.springframework.batch.core.configuration.xml.JobParserJobFactoryBean]; scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null]
+11.02.2015 16:45:33  INFO (DefaultListableBeanFactory.java:647) - Overriding bean definition for bean 'secondJob': replacing [Generic bean: class [org.springframework.batch.core.configuration.xml.SimpleFlowFactoryBean]; scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null] with [Generic bean: class [org.springframework.batch.core.configuration.xml.JobParserJobFactoryBean]; scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null]
+11.02.2015 16:45:33  INFO (DefaultListableBeanFactory.java:647) - Overriding bean definition for bean 'thirdJob': replacing [Generic bean: class [org.springframework.batch.core.configuration.xml.SimpleFlowFactoryBean]; scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null] with [Generic bean: class [org.springframework.batch.core.configuration.xml.JobParserJobFactoryBean]; scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null]
+11.02.2015 16:45:33  INFO (PropertiesLoaderSupport.java:177) - Loading properties file from class path resource [jdbc.properties]
+11.02.2015 16:45:33  INFO (DefaultListableBeanFactory.java:647) - Overriding bean definition for bean 'pagingItemReader': replacing [Generic bean: class [org.springframework.batch.item.database.JdbcPagingItemReader]; scope=step; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=false; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null; defined in class path resource [jobContext.xml]] with [Root bean: class [org.springframework.aop.scope.ScopedProxyFactoryBean]; scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null; defined in BeanDefinition defined in class path resource [jobContext.xml]]
+11.02.2015 16:45:33  INFO (DefaultListableBeanFactory.java:581) - Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@5d5453d8: defining beans [org.springframework.beans.factory.config.PropertyPlaceholderConfigurer#0,org.springframework.aop.config.internalAutoProxyCreator,org.springframework.transaction.annotation.AnnotationTransactionAttributeSource#0,org.springframework.transaction.interceptor.TransactionInterceptor#0,org.springframework.transaction.config.internalTransactionAdvisor,dataSource,sessionFactory,transactionManager,jobRepository,jobLauncher,testReaderBDD,pagingItemReader,firstTestReader,secondTestReader,thirdTestReader,fourthTestReader,fifthTestReader,failedCaseTestReader,testProcessor,testWriterCSV,testWriterBDD,testWriter,failedStepTasklet,org.springframework.batch.core.scope.internalStepScope,org.springframework.beans.factory.config.CustomEditorConfigurer,org.springframework.batch.core.configuration.xml.CoreNamespacePostProcessor,firstStep,firstJob,thirdStep,fourthStep,firstFailedStep,secondJob,fifthStep,sixthStep,secondFailedStep,thirdJob,userDAO,userService,batchProcessStarter,scopedTarget.pagingItemReader]; root of factory hierarchy
+11.02.2015 16:45:33  INFO (Version.java:37) - HCANN000001: Hibernate Commons Annotations {4.0.1.Final}
+11.02.2015 16:45:33  INFO (Version.java:41) - HHH000412: Hibernate Core {4.1.8.Final}
+11.02.2015 16:45:33  INFO (Environment.java:239) - HHH000206: hibernate.properties not found
+11.02.2015 16:45:33  INFO (Environment.java:342) - HHH000021: Bytecode provider name : javassist
+11.02.2015 16:45:34  INFO (Dialect.java:123) - HHH000400: Using dialect: org.hibernate.dialect.MySQLDialect
+11.02.2015 16:45:34  INFO (TransactionFactoryInitiator.java:68) - HHH000399: Using default transaction strategy (direct JDBC transactions)
+11.02.2015 16:45:34  INFO (ASTQueryTranslatorFactory.java:48) - HHH000397: Using ASTQueryTranslatorFactory
+11.02.2015 16:45:34  INFO (HibernateTransactionManager.java:268) - Using DataSource [org.apache.tomcat.jdbc.pool.DataSource@cbb5ec0{ConnectionPool[defaultAutoCommit=null; defaultReadOnly=null; defaultTransactionIsolation=-1; defaultCatalog=null; driverClassName=com.mysql.jdbc.Driver; maxActive=10; maxIdle=10; minIdle=3; initialSize=10; maxWait=30000; testOnBorrow=true; testOnReturn=true; timeBetweenEvictionRunsMillis=30000; numTestsPerEvictionRun=0; minEvictableIdleTimeMillis=60000; testWhileIdle=true; testOnConnect=false; password=admin; url=jdbc:mysql://localhost:3306/onlinetechvision; username=root; validationQuery=SELECT 1 FROM DUAL; validatorClassName=null; validationInterval=30000; accessToUnderlyingConnectionAllowed=true; removeAbandoned=false; removeAbandonedTimeout=60; logAbandoned=false; connectionProperties=null; initSQL=SELECT 1 FROM DUAL; jdbcInterceptors=null; jmxEnabled=true; fairQueue=true; useEquals=true; abandonWhenPercentageFull=0; maxAge=0; useLock=false; dataSource=null; dataSourceJNDI=null; suspectTimeout=0; alternateUsernameAllowed=false; }] of Hibernate SessionFactory for HibernateTransactionManager
+11.02.2015 16:45:34  INFO (SimpleJobLauncher.java:179) - No TaskExecutor has been set, defaulting to synchronous executor.
+11.02.2015 16:45:35  INFO (BatchProcessStarter.java:39) - Strating BatchProcessStarter ...
+11.02.2015 16:45:35  INFO (SimpleJobLauncher.java:118) - Job: [FlowJob: [name=firstJob]] launched with the following parameters: [{nameUser=firstname_1}]
+11.02.2015 16:45:35  INFO (SimpleStepHandler.java:133) - Executing step: [firstStep]
+Hibernate: SELECT id, name, surname FROM user WHERE name=? ORDER BY id ASC LIMIT 4
+11.02.2015 16:45:35  INFO (TestProcessor.java:29) - Process user [id : 2, name : FIRSTNAME_1, surname : FIRSTSURNAME_1]
+11.02.2015 16:45:35  INFO (TestProcessor.java:29) - Process user [id : 6, name : FIRSTNAME_1, surname : DAFUCK]
+11.02.2015 16:45:35  INFO (TestProcessor.java:29) - Process user [id : 7, name : FIRSTNAME_1, surname : DAMOTHERFUCK]
+11.02.2015 16:45:35  INFO (TestProcessor.java:29) - Process user [id : 8, name : FIRSTNAME_1, surname : DAMOTHERFUCK_1]
+11.02.2015 16:45:35  INFO (TestWriterCSV.java:31) - User List : [id : 2, name : FIRSTNAME_1, surname : FIRSTSURNAME_1, id : 6, name : FIRSTNAME_1, surname : DAFUCK, id : 7, name : FIRSTNAME_1, surname : DAMOTHERFUCK, id : 8, name : FIRSTNAME_1, surname : DAMOTHERFUCK_1]
+Hibernate: SELECT id, name, surname FROM user WHERE name=? AND id > ? ORDER BY id ASC LIMIT 4
+11.02.2015 16:45:35  INFO (TestProcessor.java:29) - Process user [id : 9, name : FIRSTNAME_1, surname : DAMOTHERFUCK_2]
+11.02.2015 16:45:35  INFO (TestProcessor.java:29) - Process user [id : 10, name : FIRSTNAME_1, surname : DAMOTHERFUCK_3]
+11.02.2015 16:45:35  INFO (TestProcessor.java:29) - Process user [id : 11, name : FIRSTNAME_1, surname : DAMOTHERFUCK_4]
+11.02.2015 16:45:35  INFO (TestProcessor.java:29) - Process user [id : 12, name : FIRSTNAME_1, surname : DAMOTHERFUCK_5]
+11.02.2015 16:45:35  INFO (TestWriterCSV.java:31) - User List : [id : 9, name : FIRSTNAME_1, surname : DAMOTHERFUCK_2, id : 10, name : FIRSTNAME_1, surname : DAMOTHERFUCK_3, id : 11, name : FIRSTNAME_1, surname : DAMOTHERFUCK_4, id : 12, name : FIRSTNAME_1, surname : DAMOTHERFUCK_5]
+Hibernate: SELECT id, name, surname FROM user WHERE name=? AND id > ? ORDER BY id ASC LIMIT 4
+11.02.2015 16:45:35  INFO (TestProcessor.java:29) - Process user [id : 13, name : FIRSTNAME_1, surname : DAMOTHERFUCK_6]
+11.02.2015 16:45:35  INFO (TestProcessor.java:29) - Process user [id : 14, name : FIRSTNAME_1, surname : DAMOTHERFUCK_7]
+11.02.2015 16:45:35  INFO (TestProcessor.java:29) - Process user [id : 15, name : FIRSTNAME_1, surname : DAMOTHERFUCK_8]
+11.02.2015 16:45:35  INFO (TestProcessor.java:29) - Process user [id : 16, name : FIRSTNAME_1, surname : DAMOTHERFUCK_9]
+11.02.2015 16:45:35  INFO (TestWriterCSV.java:31) - User List : [id : 13, name : FIRSTNAME_1, surname : DAMOTHERFUCK_6, id : 14, name : FIRSTNAME_1, surname : DAMOTHERFUCK_7, id : 15, name : FIRSTNAME_1, surname : DAMOTHERFUCK_8, id : 16, name : FIRSTNAME_1, surname : DAMOTHERFUCK_9]
+Hibernate: SELECT id, name, surname FROM user WHERE name=? AND id > ? ORDER BY id ASC LIMIT 4
+11.02.2015 16:45:35  INFO (TestProcessor.java:29) - Process user [id : 17, name : FIRSTNAME_1, surname : DAMOTHERFUCK_10]
+11.02.2015 16:45:35  INFO (TestWriterCSV.java:31) - User List : [id : 17, name : FIRSTNAME_1, surname : DAMOTHERFUCK_10]
+11.02.2015 16:45:35  INFO (SimpleJobLauncher.java:121) - Job: [FlowJob: [name=firstJob]] completed with the following parameters: [{nameUser=firstname_1}] and the following status: [COMPLETED]
+11.02.2015 16:45:35  INFO (BatchProcessStarter.java:49) - ##### JobExecution => JobExecution: id=0, version=2, startTime=Wed Feb 11 16:45:35 CET 2015, endTime=Wed Feb 11 16:45:35 CET 2015, lastUpdated=Wed Feb 11 16:45:35 CET 2015, status=COMPLETED, exitStatus=exitCode=COMPLETED;exitDescription=, job=[JobInstance: id=0, version=0, JobParameters=[{nameUser=firstname_1}], Job=[firstJob]]
+11.02.2015 16:45:35  INFO (BatchProcessStarter.java:50) - ##### Exit Status : COMPLETED
+11.02.2015 16:45:35  INFO (BatchProcessStarter.java:51) - ##### Exit Status : []
+11.02.2015 16:45:35  INFO (Application.java:33) - Application END
+		   
+
+TEST OK (13 élements avec name="firstname_1")
+Lecture par pagination 4 en mémoire et commit-interval="10"
+read unitaire (mémoire) et process unitaire x 10 (commit-interval="10") et appel du write avec 10 élément
+
+SQL fait 3 requête SQL avant commit pour atteindre les 10 éléments :
+
+		   SET autocommit=0
+		   52 Query	SET SQL_SELECT_LIMIT=4
+		   52 Query	SELECT id, name, surname FROM user WHERE name='firstname_1' ORDER BY id ASC LIMIT 4
+		   52 Query	SELECT id, name, surname FROM user WHERE name='firstname_1' AND id > 8 ORDER BY id ASC LIMIT 4
+		   52 Query	SELECT id, name, surname FROM user WHERE name='firstname_1' AND id > 12 ORDER BY id ASC LIMIT 4
+		   52 Query	commit
+		   52 Query	SET autocommit=1
+		   52 Query	SET SQL_SELECT_LIMIT=DEFAULT
+		   52 Query	select @@session.tx_read_only
+		   52 Query	SET autocommit=0
+		   52 Query	SET SQL_SELECT_LIMIT=4
+		   52 Query	SELECT id, name, surname FROM user WHERE name='firstname_1' AND id > 16 ORDER BY id ASC LIMIT 4
+		   52 Query	commit
+		   52 Query	SET autocommit=1
+		   
+11.02.2015 16:48:36  INFO (Application.java:29) - Strating Application ...
+11.02.2015 16:48:36  INFO (AbstractApplicationContext.java:500) - Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@3bd5f0e6: startup date [Wed Feb 11 16:48:36 CET 2015]; root of context hierarchy
+11.02.2015 16:48:36  INFO (XmlBeanDefinitionReader.java:315) - Loading XML bean definitions from class path resource [applicationContext.xml]
+11.02.2015 16:48:36  INFO (XmlBeanDefinitionReader.java:315) - Loading XML bean definitions from class path resource [jobContext.xml]
+11.02.2015 16:48:36  INFO (XmlBeanDefinitionReader.java:315) - Loading XML bean definitions from class path resource [dataContext.xml]
+11.02.2015 16:48:36  INFO (DefaultListableBeanFactory.java:647) - Overriding bean definition for bean 'firstJob': replacing [Generic bean: class [org.springframework.batch.core.configuration.xml.SimpleFlowFactoryBean]; scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null] with [Generic bean: class [org.springframework.batch.core.configuration.xml.JobParserJobFactoryBean]; scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null]
+11.02.2015 16:48:36  INFO (DefaultListableBeanFactory.java:647) - Overriding bean definition for bean 'secondJob': replacing [Generic bean: class [org.springframework.batch.core.configuration.xml.SimpleFlowFactoryBean]; scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null] with [Generic bean: class [org.springframework.batch.core.configuration.xml.JobParserJobFactoryBean]; scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null]
+11.02.2015 16:48:36  INFO (DefaultListableBeanFactory.java:647) - Overriding bean definition for bean 'thirdJob': replacing [Generic bean: class [org.springframework.batch.core.configuration.xml.SimpleFlowFactoryBean]; scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null] with [Generic bean: class [org.springframework.batch.core.configuration.xml.JobParserJobFactoryBean]; scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null]
+11.02.2015 16:48:36  INFO (PropertiesLoaderSupport.java:177) - Loading properties file from class path resource [jdbc.properties]
+11.02.2015 16:48:36  INFO (DefaultListableBeanFactory.java:647) - Overriding bean definition for bean 'pagingItemReader': replacing [Generic bean: class [org.springframework.batch.item.database.JdbcPagingItemReader]; scope=step; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=false; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null; defined in class path resource [jobContext.xml]] with [Root bean: class [org.springframework.aop.scope.ScopedProxyFactoryBean]; scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null; defined in BeanDefinition defined in class path resource [jobContext.xml]]
+11.02.2015 16:48:36  INFO (DefaultListableBeanFactory.java:581) - Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@5d5453d8: defining beans [org.springframework.beans.factory.config.PropertyPlaceholderConfigurer#0,org.springframework.aop.config.internalAutoProxyCreator,org.springframework.transaction.annotation.AnnotationTransactionAttributeSource#0,org.springframework.transaction.interceptor.TransactionInterceptor#0,org.springframework.transaction.config.internalTransactionAdvisor,dataSource,sessionFactory,transactionManager,jobRepository,jobLauncher,testReaderBDD,pagingItemReader,firstTestReader,secondTestReader,thirdTestReader,fourthTestReader,fifthTestReader,failedCaseTestReader,testProcessor,testWriterCSV,testWriterBDD,testWriter,failedStepTasklet,org.springframework.batch.core.scope.internalStepScope,org.springframework.beans.factory.config.CustomEditorConfigurer,org.springframework.batch.core.configuration.xml.CoreNamespacePostProcessor,firstStep,firstJob,thirdStep,fourthStep,firstFailedStep,secondJob,fifthStep,sixthStep,secondFailedStep,thirdJob,userDAO,userService,batchProcessStarter,scopedTarget.pagingItemReader]; root of factory hierarchy
+11.02.2015 16:48:36  INFO (Version.java:37) - HCANN000001: Hibernate Commons Annotations {4.0.1.Final}
+11.02.2015 16:48:36  INFO (Version.java:41) - HHH000412: Hibernate Core {4.1.8.Final}
+11.02.2015 16:48:36  INFO (Environment.java:239) - HHH000206: hibernate.properties not found
+11.02.2015 16:48:36  INFO (Environment.java:342) - HHH000021: Bytecode provider name : javassist
+11.02.2015 16:48:37  INFO (Dialect.java:123) - HHH000400: Using dialect: org.hibernate.dialect.MySQLDialect
+11.02.2015 16:48:37  INFO (TransactionFactoryInitiator.java:68) - HHH000399: Using default transaction strategy (direct JDBC transactions)
+11.02.2015 16:48:37  INFO (ASTQueryTranslatorFactory.java:48) - HHH000397: Using ASTQueryTranslatorFactory
+11.02.2015 16:48:37  INFO (HibernateTransactionManager.java:268) - Using DataSource [org.apache.tomcat.jdbc.pool.DataSource@43986e78{ConnectionPool[defaultAutoCommit=null; defaultReadOnly=null; defaultTransactionIsolation=-1; defaultCatalog=null; driverClassName=com.mysql.jdbc.Driver; maxActive=10; maxIdle=10; minIdle=3; initialSize=10; maxWait=30000; testOnBorrow=true; testOnReturn=true; timeBetweenEvictionRunsMillis=30000; numTestsPerEvictionRun=0; minEvictableIdleTimeMillis=60000; testWhileIdle=true; testOnConnect=false; password=admin; url=jdbc:mysql://localhost:3306/onlinetechvision; username=root; validationQuery=SELECT 1 FROM DUAL; validatorClassName=null; validationInterval=30000; accessToUnderlyingConnectionAllowed=true; removeAbandoned=false; removeAbandonedTimeout=60; logAbandoned=false; connectionProperties=null; initSQL=SELECT 1 FROM DUAL; jdbcInterceptors=null; jmxEnabled=true; fairQueue=true; useEquals=true; abandonWhenPercentageFull=0; maxAge=0; useLock=false; dataSource=null; dataSourceJNDI=null; suspectTimeout=0; alternateUsernameAllowed=false; }] of Hibernate SessionFactory for HibernateTransactionManager
+11.02.2015 16:48:37  INFO (SimpleJobLauncher.java:179) - No TaskExecutor has been set, defaulting to synchronous executor.
+11.02.2015 16:48:38  INFO (BatchProcessStarter.java:39) - Strating BatchProcessStarter ...
+11.02.2015 16:48:38  INFO (SimpleJobLauncher.java:118) - Job: [FlowJob: [name=firstJob]] launched with the following parameters: [{nameUser=firstname_1}]
+11.02.2015 16:48:38  INFO (SimpleStepHandler.java:133) - Executing step: [firstStep]
+Hibernate: SELECT id, name, surname FROM user WHERE name=? ORDER BY id ASC LIMIT 4
+Hibernate: SELECT id, name, surname FROM user WHERE name=? AND id > ? ORDER BY id ASC LIMIT 4
+Hibernate: SELECT id, name, surname FROM user WHERE name=? AND id > ? ORDER BY id ASC LIMIT 4
+11.02.2015 16:48:38  INFO (TestProcessor.java:29) - Process user [id : 2, name : FIRSTNAME_1, surname : FIRSTSURNAME_1]
+11.02.2015 16:48:38  INFO (TestProcessor.java:29) - Process user [id : 6, name : FIRSTNAME_1, surname : DAFUCK]
+11.02.2015 16:48:38  INFO (TestProcessor.java:29) - Process user [id : 7, name : FIRSTNAME_1, surname : DAMOTHERFUCK]
+11.02.2015 16:48:38  INFO (TestProcessor.java:29) - Process user [id : 8, name : FIRSTNAME_1, surname : DAMOTHERFUCK_1]
+11.02.2015 16:48:38  INFO (TestProcessor.java:29) - Process user [id : 9, name : FIRSTNAME_1, surname : DAMOTHERFUCK_2]
+11.02.2015 16:48:38  INFO (TestProcessor.java:29) - Process user [id : 10, name : FIRSTNAME_1, surname : DAMOTHERFUCK_3]
+11.02.2015 16:48:38  INFO (TestProcessor.java:29) - Process user [id : 11, name : FIRSTNAME_1, surname : DAMOTHERFUCK_4]
+11.02.2015 16:48:38  INFO (TestProcessor.java:29) - Process user [id : 12, name : FIRSTNAME_1, surname : DAMOTHERFUCK_5]
+11.02.2015 16:48:38  INFO (TestProcessor.java:29) - Process user [id : 13, name : FIRSTNAME_1, surname : DAMOTHERFUCK_6]
+11.02.2015 16:48:38  INFO (TestProcessor.java:29) - Process user [id : 14, name : FIRSTNAME_1, surname : DAMOTHERFUCK_7]
+11.02.2015 16:48:38  INFO (TestWriterCSV.java:31) - User List : [id : 2, name : FIRSTNAME_1, surname : FIRSTSURNAME_1, id : 6, name : FIRSTNAME_1, surname : DAFUCK, id : 7, name : FIRSTNAME_1, surname : DAMOTHERFUCK, id : 8, name : FIRSTNAME_1, surname : DAMOTHERFUCK_1, id : 9, name : FIRSTNAME_1, surname : DAMOTHERFUCK_2, id : 10, name : FIRSTNAME_1, surname : DAMOTHERFUCK_3, id : 11, name : FIRSTNAME_1, surname : DAMOTHERFUCK_4, id : 12, name : FIRSTNAME_1, surname : DAMOTHERFUCK_5, id : 13, name : FIRSTNAME_1, surname : DAMOTHERFUCK_6, id : 14, name : FIRSTNAME_1, surname : DAMOTHERFUCK_7]
+Hibernate: SELECT id, name, surname FROM user WHERE name=? AND id > ? ORDER BY id ASC LIMIT 4
+11.02.2015 16:48:38  INFO (TestProcessor.java:29) - Process user [id : 15, name : FIRSTNAME_1, surname : DAMOTHERFUCK_8]
+11.02.2015 16:48:38  INFO (TestProcessor.java:29) - Process user [id : 16, name : FIRSTNAME_1, surname : DAMOTHERFUCK_9]
+11.02.2015 16:48:38  INFO (TestProcessor.java:29) - Process user [id : 17, name : FIRSTNAME_1, surname : DAMOTHERFUCK_10]
+11.02.2015 16:48:38  INFO (TestWriterCSV.java:31) - User List : [id : 15, name : FIRSTNAME_1, surname : DAMOTHERFUCK_8, id : 16, name : FIRSTNAME_1, surname : DAMOTHERFUCK_9, id : 17, name : FIRSTNAME_1, surname : DAMOTHERFUCK_10]
+11.02.2015 16:48:38  INFO (SimpleJobLauncher.java:121) - Job: [FlowJob: [name=firstJob]] completed with the following parameters: [{nameUser=firstname_1}] and the following status: [COMPLETED]
+11.02.2015 16:48:38  INFO (BatchProcessStarter.java:49) - ##### JobExecution => JobExecution: id=0, version=2, startTime=Wed Feb 11 16:48:38 CET 2015, endTime=Wed Feb 11 16:48:38 CET 2015, lastUpdated=Wed Feb 11 16:48:38 CET 2015, status=COMPLETED, exitStatus=exitCode=COMPLETED;exitDescription=, job=[JobInstance: id=0, version=0, JobParameters=[{nameUser=firstname_1}], Job=[firstJob]]
+11.02.2015 16:48:38  INFO (BatchProcessStarter.java:50) - ##### Exit Status : COMPLETED
+11.02.2015 16:48:38  INFO (BatchProcessStarter.java:51) - ##### Exit Status : []
+11.02.2015 16:48:38  INFO (Application.java:33) - Application END
+
+=> souvant avoir pageSize = CommitInterval !
+

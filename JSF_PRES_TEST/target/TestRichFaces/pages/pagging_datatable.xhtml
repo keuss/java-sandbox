@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	template="/layout/layout.xhtml">
+	<ui:define name="title">Cars Page</ui:define>
+	<ui:define name="content">
+		<f:view>
+		    <h:form id="form">
+				<rich:tabPanel id="tabPanelCars" switchType="client">
+					<rich:tab id="carPanel" label="Cars">
+
+						<rich:datascroller for="dataTableCars" maxPages="5"/>
+				        <rich:dataTable id="dataTableCars" value="#{queueTasksDataModel}"
+							var="car" rows="30"
+							styleClass="b_thin b_collapse padding_small">
+
+							<!-- Colonne permettant d'afficher des cases de selection pour chaque ligne -->
+							<rich:column sortable="false" id="col_1" width="25px">
+								<f:facet name="header">
+									<h:panelGrid>
+										<h:outputText value="Selectioner " />
+									</h:panelGrid>
+								</f:facet>
+								<h:selectBooleanCheckbox id="boxes" value="#{car.selected}"
+									readonly="true">
+								</h:selectBooleanCheckbox>
+							</rich:column>
+				            <rich:column>
+								<f:facet name="header">
+									<h:panelGrid>
+										<h:outputText value="Vendor " />
+									</h:panelGrid>
+								</f:facet>
+				                <h:outputText value="#{car.vendor}" />
+				            </rich:column>
+				            <rich:column>
+				                <f:facet name="header">
+									<h:panelGrid>
+										<h:outputText value="Model " />
+									</h:panelGrid>
+								</f:facet>
+				                <h:outputText value="#{car.model}" />
+				            </rich:column>
+				            <rich:column>
+				                <f:facet name="header">
+									<h:panelGrid>
+										<h:outputText value="Price " />
+									</h:panelGrid>
+								</f:facet>
+				                <h:outputText value="#{car.price}" />
+				            </rich:column>
+				            <rich:column>
+				                 <f:facet name="header">
+									<h:panelGrid>
+										<h:outputText value="VIM " />
+									</h:panelGrid>
+								</f:facet>
+				                <h:outputText value="#{car.vin}" />
+				            </rich:column>
+							<rich:column>
+				                 <f:facet name="header">
+									<h:panelGrid>
+										<h:outputText value="DATE " />
+									</h:panelGrid>
+								</f:facet>
+				                <h:outputText value="#{car.date}">
+									<f:convertDateTime pattern="dd/MM/yyyy" timeZone="Europe/Paris" />
+								</h:outputText>
+				            </rich:column>
+				        </rich:dataTable>
+					</rich:tab>
+				</rich:tabPanel>
+		    </h:form>
+		</f:view>
+	</ui:define>
+</ui:composition>

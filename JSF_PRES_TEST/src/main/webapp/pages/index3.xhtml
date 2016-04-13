@@ -1,0 +1,150 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich" template="/layout/layout.xhtml">
+
+	<ui:define name="title">Login Page</ui:define>
+	<ui:define name="content">
+	
+	<!-- test modal -->
+	<ui:include src="/pages/docViewerModalPanel.xhtml" />
+	
+		<script type="text/javascript">
+		
+			var currentIdDoc = null;
+			var paramServeur = null;
+			
+			// The custom openwinBis action (used data)
+			function openwinBis(url,title,param) {
+				alert('Call for openwinBis ... param:'+param.myParamTest+' and '+param.otherParamTest);
+				var height = screen.availHeight-100
+				windowProperties = 'toolbar=no,menubar=no,resizable=yes,scrollbars=yes,statusbar=no,top=0';
+				windowProperties += ',height='+ height;
+				windowProperties += ',width=' + screen.availWidth*2/3;
+				windowProperties += ',left='+ screen.availWidth/3;
+				window.childWindow = window.open(url,title,windowProperties);
+// 				if(!window.ifChildWindow) {
+// 					// si la la fnêtre n'est pas déjà ouverte : false par défaut
+// 					window.childWindow = window.open(url,title,windowProperties);
+// 					// save current usefull data
+// 					currentIdDoc = param.myParamTest;
+// 					window.ifChildWindow = true;
+// 				} else {
+// 					window.childWindow.testJSChild('KOKOU');
+// 				}
+			}
+			
+			// The custom openwin action
+			function openwin(url,title,param) {
+				alert('call for openwin ...');
+				var height = screen.availHeight-100
+				windowProperties = 'toolbar=no,menubar=no,resizable=yes,scrollbars=yes,statusbar=no,top=0';
+				windowProperties += ',height='+ height;
+				windowProperties += ',width=' + screen.availWidth*2/3;
+				windowProperties += ',left='+ screen.availWidth/3;
+				if(!window.ifChildWindow) {
+					// si la la fnêtre n'est pas déjà ouverte : false par défaut
+					window.childWindow = window.open(url,title,windowProperties);
+					currentIdDoc = param;
+					window.ifChildWindow = true;
+				} else {
+					window.childWindow.testJSChild('KOKOU');
+				}
+			}
+			
+			// Call JS function with global var childWindow and currentIdDoc
+			function doActionInChild() {
+				window.childWindow.testJSChild(currentIdDoc);
+			}
+			
+			// the unique chil window if closed
+			function closedChild() {
+				alert('closedChild');
+				//window.ifChildWindow = false;
+			}
+			
+		</script>
+	
+		<h:form id="userFrom" prependId="false">
+			<h:panelGrid columns="2">
+
+				<h:outputLabel value="#{label.login}" />
+				<h:inputText id="j_username" value="#{loginBean.login}">
+					<a4j:support event="onblur" reRender="outtextLogin"
+						oncomplete="testDate();">
+						<f:setPropertyActionListener target="#{loginAction.currentLogin}"
+							value="#{loginBean.login}" />
+					</a4j:support>
+				</h:inputText>
+				<br />
+				<h:outputText id="outtextLogin" value="#{loginBean.login}" />
+				<br />
+				<h:message for="j_username" style="color:red" id="j_usernameMsg" />
+
+				<h:outputLabel value="#{label.password}" />
+				<h:inputSecret id="j_password" value="#{loginBean.password}">
+					<a4j:support event="onblur" reRender="outtextPass" />
+				</h:inputSecret>
+				<br />
+				<h:outputText id="outtextPass" value="#{loginBean.password}" />
+				<br />
+				<h:message for="j_password" style="color:red" id="j_passwordMsg" />
+
+				<h:commandButton type="submit" id="login"
+					action="#{loginAction.login}" value="#{label.login_validation}" />
+
+			</h:panelGrid>
+			
+			<input type="button" onclick="opener=self; window.close();" value="html close" />
+			<a4j:commandButton value="a4j close" onclick="opener=self; window.close();"/>
+			<h:commandButton value="jsf close" onclick="opener=self; window.close();"/>
+			<h:commandButton type="button" value="jsf close with type" onclick="opener=self; window.close();"/>
+			<br /><br />
+			
+			<!-- ___________________________ -->
+			<a onclick="Richfaces.showModalPanel('docViewerModalPanel', {top:'10px', left:'10px', height:'400px'});">Show ModalPanel</a>
+			<br /><br />
+			
+			<!-- ___________________________ -->
+			<a4j:commandButton value="open modal" 
+				oncomplete="Richfaces.showModalPanel('docViewerModalPanel', {top:'10px', left:'10px', height:'400px'});"
+				actionListener="#{modalTestAction.myAction}" reRender='docViewerPanel'>
+					<f:param name="param1" value="LOOOOOL1" />
+					<f:attribute name="param2" value="LOOOOOL2" />
+			</a4j:commandButton>
+			<br /><br />
+			
+			<!-- ___________________________ -->
+			<h:commandButton type="button" value="open modal jsFunction" onclick="javascript:myFunction('LOOOOOL3');" />  
+			
+			<!-- notice the <a4j:actionparam>'s will be executed first, the panel will be shown and its content updated thru the rerender.  -->
+			<a4j:jsFunction id="myFunctionId" name="myFunction" data="#{modalTestAction.myParamTest}" reRender="docViewerPanel" oncomplete="Richfaces.showModalPanel('docViewerModalPanel', {top:'10px', left:'10px', height:'400px'});testParam(data);">  
+				<a4j:actionparam name="data1" assignTo="#{modalTestAction.myParamTest}" />
+			</a4j:jsFunction>
+			<br /><br />
+			
+			<!-- ___________________________ -->
+			<h:commandButton type="button" value="open win custom btn client" onclick="openwin('#{facesContext.externalContext.request.contextPath}/pages/viewDoc.xhtml', '_blank', 'LOOOOOL4');return false;"/>  
+			<br /><br />
+			
+			<!-- ___________________________ -->
+			<h:commandButton type="button" value="open window jsFunction" onclick="javascript:myFunctionBis('LOOOOOL3','314658461');" />  
+			
+			<!-- notice the <a4j:actionparam>'s will be executed first  -->
+			<a4j:jsFunction id="myFunctionBisId" name="myFunctionBis" data="#{modalTestAction}" oncomplete="openwinBis('#{facesContext.externalContext.request.contextPath}/pages/viewDoc.xhtml', '_blank', data);return false;">  
+				<a4j:actionparam name="data1" assignTo="#{modalTestAction.myParamTest}" />
+				<a4j:actionparam name="data2" assignTo="#{modalTestAction.otherParamTest}" />
+			</a4j:jsFunction>
+			<br /><br />
+			
+			<h:commandButton type="button" value="test jsFunction get" onclick="javascript:myFunctionPerso();" />  
+			
+			<a4j:jsFunction id="myFunctionPersoId" name="myFunctionPerso" data="#{modalTestAction}" oncomplete="if (data.myParamTest == 'CLOSED') { myFunctionBis('LOOOOOL3','314658461'); };">  
+			</a4j:jsFunction>
+			
+			<br /><br />
+		</h:form>
+	</ui:define>
+</ui:composition>

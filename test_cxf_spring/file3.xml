@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Sample XML message complant with version V1.1.0 of MCOMailingDocument. -->
+<!-- This XML message describes one email (title+HTML body+PDF attachment) sent by ICONNECT/BNP Paribas Cardif to several customers during a mass mailing campain. -->
+<MCOMailingDocumentEvent xsi:schemaLocation="http://ea.assurance.bnpparibas.com/internal/schema/mco/mailingdocument/v1 ..\01-XSD\MCOMailingDocumentEvent.xsd" xmlns="http://ea.assurance.bnpparibas.com/internal/schema/mco/mailingdocument/v1" xmlns:srcn="http://ea.assurance.bnpparibas.com/internal/schema/mco/common/v1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<Sndr>
+		<srcn:Code>BNPASS</srcn:Code> <!-- un code pour titan ou cgi ? -->
+		<srcn:Name>ICONNECT</srcn:Name> 
+		<srcn:CntryCode>GB</srcn:CntryCode>
+	</Sndr>
+	<FileData>
+		<srcn:FileIdntfctn Issuer="BNPPASS" Scheme="MESMAILICON">12345</srcn:FileIdntfctn> <!-- id unique du message XML ? -->
+		<srcn:CreatnDate>2013-07-31T09:30:47.0Z</srcn:CreatnDate>
+	</FileData>
+	<MailingDoc>
+		<Mailingdntfctn>
+			<srcn:MainId Issuer="BNPPASS" Scheme="DOCMAILICON">67890</srcn:MainId> <!-- id unique du document/data XML ? -->
+		</Mailingdntfctn>
+		<MailingData>
+			<srcn:Format>HTML</srcn:Format> <!-- HTML ou PDF pour titan -->
+			<srcn:ChnnlType>EMAIL</srcn:ChnnlType>
+			<srcn:PriortyDgree>REG</srcn:PriortyDgree>
+			<srcn:Campaign>MAILING00001</srcn:Campaign>
+			<srcn:AcknwldgeType>REG</srcn:AcknwldgeType>
+			<srcn:Lang>EN</srcn:Lang>
+			<srcn:SubmssionPrd>
+				<srcn:DatePrd>
+					<srcn:FromDate>2013-07-01</srcn:FromDate>
+					<srcn:ToDate>2013-07-31</srcn:ToDate>
+				</srcn:DatePrd>
+			</srcn:SubmssionPrd>
+		</MailingData>
+		<Sndr>
+			<srcn:EMailAdrs>
+				<srcn:Adrs>
+					<srcn:EmailName>noreply@bnpparibascardif.com</srcn:EmailName>
+				</srcn:Adrs>
+				<srcn:AdrsReplyTo>
+					<srcn:EmailName>askme00001@bnpparibascardif.com</srcn:EmailName>
+					<srcn:ValdtyDate>2013-08-31</srcn:ValdtyDate>
+				</srcn:AdrsReplyTo>
+			</srcn:EMailAdrs>
+		</Sndr>
+		<Recipint>
+			<srcn:EMailAdrs>
+				<srcn:DestntnType>Bcc</srcn:DestntnType>
+				<srcn:Adrs>
+					<srcn:EmailName>customer00001@server.com</srcn:EmailName>
+				</srcn:Adrs>
+			</srcn:EMailAdrs>
+		</Recipint>
+		<Recipint>
+			<srcn:EMailAdrs>
+				<srcn:DestntnType>Bcc</srcn:DestntnType>
+				<srcn:Adrs>
+					<srcn:EmailName>customer00002@server.com</srcn:EmailName>
+				</srcn:Adrs>
+			</srcn:EMailAdrs>
+		</Recipint>
+		<!-- ... -->
+		<Recipint>
+			<srcn:EMailAdrs>
+				<srcn:DestntnType>Bcc</srcn:DestntnType>
+				<srcn:Adrs>
+					<srcn:EmailName>customer99999@server.com</srcn:EmailName>
+				</srcn:Adrs>
+			</srcn:EMailAdrs>
+		</Recipint>
+		<!-- plusieurs partie dans un document -->
+		<Part>
+			<srcn:SeqId>1</srcn:SeqId>
+			<srcn:Format>TXT</srcn:Format>
+			<srcn:ContentData>
+				<srcn:Type>TITLE</srcn:Type>
+				<srcn:TextContent>MESSAGE TITLE</srcn:TextContent>
+			</srcn:ContentData>
+		</Part>
+		<Part>
+			<srcn:SeqId>2</srcn:SeqId>
+			<srcn:Format>HTML</srcn:Format>
+			<srcn:ContentData>
+				<srcn:Type>BODY</srcn:Type>
+				<srcn:TextContent>&lt;html>&lt;body>ACTUAL MAIL BODY USING ENTITY REFERENCES TO HAVE XML CONTROL CHARACTERS NEUTALIZED &lt;/body>&lt;/html></srcn:TextContent>
+			</srcn:ContentData>
+		</Part>
+		<Part>
+			<srcn:SeqId>3</srcn:SeqId>
+			<srcn:Format>PDF</srcn:Format>
+			<srcn:ContentData>
+				<srcn:Type>ATTACH</srcn:Type>
+				<srcn:BnryContent>UjBsR09EbGhjZ0dTQUxNQUFBUUNBRU1tQ1p0dU1GUXhEUzhi</srcn:BnryContent>
+			</srcn:ContentData>
+		</Part>
+	</MailingDoc>
+</MCOMailingDocumentEvent>

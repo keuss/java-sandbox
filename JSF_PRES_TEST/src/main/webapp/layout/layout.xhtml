@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html">
+<head>
+<title><ui:insert name="title">Default title</ui:insert></title>
+
+<!-- JQUERY & JQUERY-UI !-->
+<!-- 
+<script type="text/javascript"
+	src="${request.contextPath}/public/js/jquery-1.3.2.min.js"></script>
+<script type="text/javascript"
+	src="${request.contextPath}/public/js/jquery-ui-1.7.2.min.js"></script>
+ -->
+ 
+ <script type="text/javascript">
+ 
+	 //JS global stuff ...
+	 
+	 //The unique child window
+ 	window.childWindow = null;
+ 	window.ifChildWindow = false;
+ 
+ </script>
+ 
+</head>
+<body>
+	<div id="pos">
+
+		<!-- le bloc de contenu central -->
+		<div id="bloc_content">
+
+			<div id="error">
+				<ui:insert name="error">
+					<h:messages errorClass="error" globalOnly="true" showDetail="false" />
+				</ui:insert>
+			</div>
+
+			<div id="content">
+				<ui:insert name="content">
+				</ui:insert>
+			</div>
+
+		</div>
+
+		<div id="footer">
+			<ui:include src="footer.xhtml" />
+		</div>
+
+	</div>
+
+</body>
+</html>

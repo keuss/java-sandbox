@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="WebApp_ID" version="2.5">
+
+	<display-name>JSF_PRES_TEST</display-name>
+
+	<!-- Spring Context Configuration' s Path definition -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+		    /WEB-INF/applicationContext.xml
+	     </param-value>
+	</context-param>
+
+	<!-- ######### -->
+	<!-- JSF PARAM -->
+	<!-- ######### -->
+	<context-param>
+		<param-name>facelets.DEVELOPMENT</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	<context-param>
+		<param-name>javax.faces.DEFAULT_SUFFIX</param-name>
+		<param-value>.xhtml</param-value>
+	</context-param>
+	<!-- nescessaire pour pouvoir utiliser JSF 2.0 and RichFaces 3.3.3 -->
+	<context-param>
+		<param-name>javax.faces.DISABLE_FACELET_JSF_VIEWHANDLER</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	<!-- je declare finalement ici le view handler que j'utilise -->
+	<context-param>
+		<param-name>org.ajax4jsf.VIEW_HANDLERS</param-name>
+		<param-value>com.sun.facelets.FaceletViewHandler</param-value>
+	</context-param>
+	<context-param>
+		<param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+		<param-value>server</param-value>
+	</context-param>
+	<context-param>
+		<param-name>org.richfaces.SKIN</param-name>
+		<param-value>blueSky</param-value>
+	</context-param>
+	<context-param>
+		<param-name>org.richfaces.CONTROL_SKINNING</param-name>
+		<param-value>enable</param-value>
+	</context-param>
+
+	<!-- Welcome Page -->
+	<welcome-file-list>
+		<welcome-file>/pages/index.xhtml</welcome-file>
+	</welcome-file-list>
+
+	<!-- ###################### -->
+	<!-- ###### LISTENER ###### -->
+	<!-- ###################### -->
+	<!-- The Bootstrap listener to start up and shut down Spring's root WebApplicationContext. 
+		It is registered to Servlet Container -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>com.sun.faces.config.ConfigureListener</listener-class>
+	</listener>
+
+	<!-- #################### -->
+	<!-- ###### FILTER ###### -->
+	<!-- #################### -->
+	<filter>
+		<display-name>RichFaces Filter</display-name>
+		<filter-name>richfaces</filter-name>
+		<filter-class>org.ajax4jsf.Filter</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>richfaces</filter-name>
+		<servlet-name>FacesServlet</servlet-name>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
+	</filter-mapping>
+
+	<!-- ####################### -->
+	<!-- ####### SERVLET ####### -->
+	<!-- ####################### -->
+	<servlet>
+		<servlet-name>FacesServlet</servlet-name>
+		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>FacesServlet</servlet-name>
+		<url-pattern>*.xhtml</url-pattern>
+	</servlet-mapping>
+
+</web-app>

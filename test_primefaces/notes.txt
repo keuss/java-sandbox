@@ -1,0 +1,208 @@
+TUTO:
+http://www.javacodegeeks.com/2012/04/jsf-2-primefaces-3-spring-3-hibernate-4.html
+GIT du tuto initial : https://github.com/erenavsarogullari/OTV_JSF_Spring_Hibernate/
+
+TUTO INITIAL : OTV_JSF_Spring_Hibernate.zip à la racine du projet
+
+INSTALL :
+mysql-installer-community-5.6.10.1.msi (c:/apps/MySQL) / root : admin, sans user spécifique
+
+USE OF:
+C:\ApacheSoftwareFoundation\apache-tomcat-7.0.33
+
+CONFIGURATION :
+CREATE TABLE USER (
+   id int(11) NOT NULL,
+   name varchar(45) NOT NULL,
+   surname varchar(45) NOT NULL,
+   PRIMARY KEY (`id`)
+);
+
+DATABASE : test
+
+Archetype maven : jsf-jpa-spring 1.1 (j'ai supprimer plein de chose de l'archetype : context.xml, persistence.xml, et fusionner les dépendances avec celle du tuto)
+
+TEST:
+Test un vrai tomcat : cp du war
+http://localhost:8088/spring-jsf-jpa
+
+mais erreur dead lock on démarrage ... problème cnx mysql root ... => pb. compte mysql (root/admin : ok)
+
+Test OK : select * from user;
+
+Test OK via vrai tomcat 7
+
+--------------------------
+
+Test via tomcat Eclipse
+
+Ajout du faces dynamicWeb Module sur le projet pour l'avoir sur le serveur tomcat Eclipse ... mais rien ne se passe (il ne charge pas la servlet SJF ...)
+
+Ajout du faces JSF : mais
+GRAVE: La servlet /test_primefaces a généré une exception "load()"
+java.lang.ClassNotFoundException: javax.faces.webapp.FacesServlet
+	at org.apache.catalina.loader.WebappClassLoader.loadClass(WebappClassLoader.java:1714)
+
+Test avec add user lib : C:\Users\galloisg\.m2\repository\com\sun\faces\jsf-api\2.1.6\jsf-api-2.1.6.jar
+
+mais autre erreur JSF ...
+
+TODO ... ?
+
+20130304 :
+Attention web.xml et faces-config.xml en double !!!! Je supprime ceux dans src/main/webapp, c'est mieux mais : 
+4 mars 2013 16:11:44 org.apache.catalina.core.StandardContext listenerStart
+GRAVE: Erreur lors de la configuration de la classe d'écoute de l'application (application listener) org.springframework.web.context.ContextLoaderListener
+java.lang.ClassNotFoundException: org.springframework.web.context.ContextLoaderListener
+	at org.apache.catalina.loader.WebappClassLoader.loadClass(WebappClassLoader.java:1714)
+	at org.apache.catalina.loader.WebappClassLoader.loadClass(WebappClassLoader.java:1559)
+	at org.apache.catalina.core.DefaultInstanceManager.loadClass(DefaultInstanceManager.java:532)
+	at org.apache.catalina.core.DefaultInstanceManager.loadClassMaybePrivileged(DefaultInstanceManager.java:514)
+	at org.apache.catalina.core.DefaultInstanceManager.newInstance(DefaultInstanceManager.java:133)
+	at org.apache.catalina.core.StandardContext.listenerStart(StandardContext.java:4727)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5285)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:150)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1559)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1549)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:303)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:138)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:886)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:908)
+	at java.lang.Thread.run(Thread.java:662)
+4 mars 2013 16:11:44 org.apache.catalina.core.StandardContext listenerStart
+GRAVE: Erreur lors de la configuration de la classe d'écoute de l'application (application listener) org.springframework.web.context.request.RequestContextListener
+java.lang.ClassNotFoundException: org.springframework.web.context.request.RequestContextListener
+	at org.apache.catalina.loader.WebappClassLoader.loadClass(WebappClassLoader.java:1714)
+	at org.apache.catalina.loader.WebappClassLoader.loadClass(WebappClassLoader.java:1559)
+	at org.apache.catalina.core.DefaultInstanceManager.loadClass(DefaultInstanceManager.java:532)
+	at org.apache.catalina.core.DefaultInstanceManager.loadClassMaybePrivileged(DefaultInstanceManager.java:514)
+	at org.apache.catalina.core.DefaultInstanceManager.newInstance(DefaultInstanceManager.java:133)
+	at org.apache.catalina.core.StandardContext.listenerStart(StandardContext.java:4727)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5285)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:150)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1559)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1549)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:303)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:138)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:886)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:908)
+	at java.lang.Thread.run(Thread.java:662)
+4 mars 2013 16:11:44 org.apache.catalina.core.Standard
+
+malgrès les clean, ... F5, ... => http://stackoverflow.com/questions/6322711/tomcat-spring-web-class-not-found-exception-org-springframework-web-context
+
+"The solution was simple. Right Click on your web project in Project Explorer -> select 'Properties'. Under project properties, select 'Deployment Assembly'.
+The Deployment Assembly property page shows the content that will be published as a assembled artifact by Eclipse to the server. You need to tell Eclipse that
+you want all your Maven dependencies to be published too.
+To do that, click 'Add' button, then select 'Java Build Path Entries'. Click Next and select Maven Dependencies.
+This will publish the Maven dependency JAR files to the lib folder when Eclipse publishes your project to WST server."
+
+
+Test OK avec http://localhost:8088/test_primefaces
+
+Après la sup. du web.xml dans src/main/webapp/WEB-INF :
+
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-war-plugin:2.1.1:war (default-war) on project test_primefaces: Error assembling WAR: webxml attribute is required (or pre-existing WEB-INF/web.xml if executing in update mode) -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException
+
+
+Ok avec ajout dans le pom (http://stackoverflow.com/questions/5351948/webxml-attribute-is-required-error-maven) : 
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <webXml>${project.basedir}\WebContent\WEB-INF\web.xml</webXml>
+                </configuration>
+            </plugin>
+            
+Test final OK avec http://localhost:8088/test_primefaces
+et KO vrai tomcat via :
+http://localhost:8088/spring-jsf-jpa
+
+---------------------------------------
+
+Pour que ça fonction dans les deux cas :
+
+http://stackoverflow.com/questions/8134179/how-to-pack-resources-in-a-maven-project
+
+WebContent pour tomcat Eclipse (cf. DeploymentAssembly.png) + <warSourceDirectory>${project.basedir}/WebContent</warSourceDirectory> dans le pom (plugin war) pour tomcat réel v7 :
+
+			<!-- ADD GGA suite a sup src/main/webapp -->
+			<!-- Soit on met ce plugin, OU mettre le web.xml dans src/main/webapp/WEB-INF -->
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                	<warSourceDirectory>${project.basedir}/WebContent</warSourceDirectory>
+<!--                     <webXml>${project.basedir}\WebContent\WEB-INF\web.xml</webXml> -->
+                </configuration>
+            </plugin>
+
+OU
+
+que un folder webapp/... (pas de WebContent) avec DeploymentAssembly2.png (pour tomcat eclipse) et sans le plugin org.apache.maven.plugins pour tomcat réel
+
+
+Notes : les 'Deployment Assembly' sont pour le tomcat eclipse !
+Le default warSourceDirectory doit être src/main/webapp !
+Pas besoin du Facet JSF! ;-), les 'Deployment Assembly' c'est important pour les devs sur eclipse !!
+
+
+Pour MySQL : utilisation de MySQL Workbench 5.2 CE (BDD "test", table "user" : select * from user;)
+
+Si :
+INFO : org.springframework.beans.factory.xml.XmlBeanDefinitionReader - Loading XML bean definitions from ServletContext resource [/WEB-INF/applicationContext.xml]
+INFO : org.springframework.beans.factory.config.PropertyPlaceholderConfigurer - Loading properties file from URL [file:/D:/workspace_test_2012/.metadata/.plugins/org.eclipse.wst.server.core/tmp1/wtpwebapps/test_primefaces/WEB-INF/classes/db.properties]
+INFO : org.springframework.beans.factory.support.DefaultListableBeanFactory - Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@144b9ff: defining beans [org.springframework.beans.factory.config.PropertyPlaceholderConfigurer#0,User,UserService,UserDAO,DataSource,SessionFactory,org.springframework.aop.config.internalAutoProxyCreator,org.springframework.transaction.annotation.AnnotationTransactionAttributeSource#0,org.springframework.transaction.interceptor.TransactionInterceptor#0,org.springframework.transaction.config.internalTransactionAdvisor,txManager]; root of factory hierarchy
+WARN : com.mchange.v2.async.ThreadPoolAsynchronousRunner - com.mchange.v2.async.ThreadPoolAsynchronousRunner$DeadlockDetector@a7ae01 -- APPARENT DEADLOCK!!! Creating emergency threads for unassigned pending tasks!
+WARN : com.mchange.v2.async.ThreadPoolAsynchronousRunner - com.mchange.v2.async.ThreadPoolAsynchronousRunner$DeadlockDetector@a7ae01 -- APPARENT DEADLOCK!!! Complete Status: 
+
+=> Server MySQL down : aller sur la partie admin du Workbench et stat ...
+
+-------------------------
+
+20130409 : Test MyServlet
+
+Test okai avec : http://localhost:8088/test_primefaces/myservlet
+en mettant à jour les dep. log et le log4j.xml
+
+
+
+Pour aller plus loins sur le message et la validation :
+http://www.primefaces.org/showcase/ui/messages.jsf
+http://www.primefaces.org/showcase/ui/ajaxifyAction.jsf
+http://www.primefaces.org/docs/vdl/3.5/primefaces-p/ajax.html
+http://stackoverflow.com/questions/9805276/jsf-and-primefaces-how-to-pass-parameter-to-a-method-in-managedbean
+Login :
+http://www.primefaces.org/showcase/ui/dialogLogin.jsf
+Ajax event : (quitter le focus, ...)
+http://www.primefaces.org/showcase/ui/ajaxifyKeyEvents.jsf
+onerror Ajax and exception java :
+http://forum.primefaces.org/viewtopic.php?f=3&t=19296
+http://stackoverflow.com/questions/11661051/primefaces-with-jsf-onerror-in-the-pcommandbutton-doesnt-work
+utilisation du requestContext
+http://stackoverflow.com/questions/6651411/how-to-use-requestcontext-in-primefaces
+
+
+20130912 :
+test block add btn : ok
+test reset : ok
+test chrom/FF : ok
+
+20130918 :
+SANS <p:ajax event="blur" update="surnameMsg" /> => pas de comportement ajax sur le p:inputText => pas de setSurname applelé côté ManagedBean :)
+cf. documentation http://www.primefaces.org/docs/vdl/3.5/primefaces-p/ajax.html
++ cf. mote dans la class ...
+
+20150403 :
+MAJ. des deployment assembly + création table user sur bdd test et test ok avec : http://localhost:8088/spring-jsf-jpa
+
+TEST spring 3.1.1 profiles
+=>

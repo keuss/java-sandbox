@@ -1,0 +1,12 @@
+avr. 25, 2014 6:06:38 PM com.test.log.Utils doSomething
+SEVERE: severe Log
+avr. 25, 2014 6:06:38 PM com.test.log.Utils doSomething
+WARNING: warning Log
+avr. 25, 2014 6:06:38 PM com.test.log.Utils doSomething
+INFO: info Log
+avr. 25, 2014 6:06:38 PM com.test.log.Utils2 doSomething2
+SEVERE: severe Log 2
+avr. 25, 2014 6:06:38 PM com.test.log.Utils2 doSomething2
+WARNING: warning Log 2
+avr. 25, 2014 6:06:38 PM com.test.log.Utils2 doSomething2
+INFO: info Log 2
